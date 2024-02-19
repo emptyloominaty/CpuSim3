@@ -8,7 +8,7 @@
         Title="MainWindow" Height="900" Width="1600">
     <Grid>
         <TextBlock Name="fpsText" HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" Text="Fps:" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
-        <Canvas Height="480" Width="640" Name="myCanvas" Margin="100,100,100,100" Grid.ColumnSpan="2"/>
+        <Canvas Height="600" Width="800" Name="myCanvas" Margin="100,250,100,100" Grid.ColumnSpan="2"/>
 
     </Grid>
 </Window>

@@ -19,10 +19,18 @@ namespace CpuSim3 {
     /// </summary>
     public partial class MainWindow : Window {
         public long time1 = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
+        public OpCodes opCodes;
+        public Cpu cpu;
         public MainWindow() {
             InitializeComponent();
 
             CompositionTarget.Rendering += Loop;
+
+            opCodes = new OpCodes();
+            cpu = new Cpu(opCodes.codes);
+            cpu.StartCpu();
+
+
 
             //TEST
             Random random = new Random();
@@ -39,7 +47,8 @@ namespace CpuSim3 {
                 }
             }
         }
-        private void Loop(object sender, EventArgs e) {
+
+        public void Loop(object sender, EventArgs e) {
             long ticks = TimeSpan.TicksPerMillisecond;
             if (ticks < 1) {
                 ticks = 1;
@@ -52,13 +61,15 @@ namespace CpuSim3 {
 
             fpsText.Text = "FPS: " + fps + "";
             time1 = DateTime.Now.Ticks / ticks;
+
+     
             //Random random = new Random();
             //Color[] colors = new Color[] { Colors.Red, Colors.White, Colors.Black };
             //int randomNumber = random.Next(0, 3);
             //DrawFilledRectangle(50,50,25, 25, colors[randomNumber]);
         }
 
-        private void DrawFilledRectangle(double x, double y, double width, double height, Color color) {
+        public void DrawFilledRectangle(double x, double y, double width, double height, Color color) {
             Rectangle rect = new Rectangle {
                 Width = width,
                 Height = height,

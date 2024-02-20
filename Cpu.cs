@@ -13,7 +13,7 @@ namespace CpuSim3 {
         public OpCode[] opCodes;
 
         public bool maxClock = true;
-        public long clockSet = 1000000;
+        public long clockSet = 100000;
         public long clock = 0;
 
         public bool cpuRunning = true;
@@ -25,8 +25,8 @@ namespace CpuSim3 {
         public long timeB;
         public long timeC;
         public long timeD;
-        public long timeClockA = DateTime.Now.Ticks / 100;
-        public long timeClockB = DateTime.Now.Ticks / 100;
+        public long timeClockA = DateTime.Now.Ticks * 100;
+        public long timeClockB = DateTime.Now.Ticks * 100;
 
         public bool halted = false;
         public bool interruptHw = false;
@@ -120,11 +120,11 @@ namespace CpuSim3 {
                     if (maxClock) {
                         Main();
                     } else {
-                        timeClockA = DateTime.Now.Ticks / 100;
+                        timeClockA = DateTime.Now.Ticks * 100;
                         Main();
                         timeClockD = 0;
                         while (timeClockD < timeClockWait) {
-                            timeClockB = DateTime.Now.Ticks / 100;
+                            timeClockB = DateTime.Now.Ticks * 100;
                             timeClockD = timeClockB - timeClockA;
                         }
                     }
@@ -244,6 +244,17 @@ namespace CpuSim3 {
         public void Execute() {
             instructionsDone++;
             uint val;
+            uint load;
+            byte[] store;
+            byte byte1;
+            byte byte2;
+            byte byte3; 
+            byte byte4;
+            byte[] bytes;
+            uint address1;
+            uint address2;
+            uint address3;
+            uint address4;
             switch (op) {
                 case 1: //ADD  r1+r2=r3
                     val = registers[instructionData[1]] + registers[instructionData[2]];
@@ -258,6 +269,132 @@ namespace CpuSim3 {
                     break;
                 case 4: //ST1
                     Memory.Write(Functions.ConvertTo24Bit(instructionData[2], instructionData[3], instructionData[4]), (byte)registers[instructionData[1]]);
+                    break;
+                case 5: //LD2
+                    load = Functions.ConvertTo16Bit(Memory.Read(Functions.ConvertTo24Bit(instructionData[2], instructionData[3], instructionData[4])),
+                        Memory.Read(Functions.ConvertTo24Bit(instructionData[2], instructionData[3], instructionData[4]) + 1));
+                    registers[instructionData[1]] = load;
+                    break;
+                case 6: //ST2
+                    store = Functions.ConvertFrom16Bit(registers[instructionData[1]]);
+                    Memory.Write(Functions.ConvertTo24Bit(instructionData[2], instructionData[3], instructionData[4]), store[0]);
+                    Memory.Write(Functions.ConvertTo24Bit(instructionData[2], instructionData[3], instructionData[4]) + 1, store[1]);
+                    break;
+                case 7: //LD3
+                    byte1 = Memory.Read(Functions.ConvertTo24Bit(instructionData[2], instructionData[3], instructionData[4]));
+                    byte2 = Memory.Read(Functions.ConvertTo24Bit(instructionData[2], instructionData[3], instructionData[4]) + 1);
+                    byte3 = Memory.Read(Functions.ConvertTo24Bit(instructionData[2], instructionData[3], instructionData[4]) + 2);
+                    load = Functions.ConvertTo24Bit(byte1, byte2, byte3);
+                    registers[instructionData[1]] = load;
+                    break;
+                case 8: //ST3
+                    address1 = Functions.ConvertTo24Bit(instructionData[2], instructionData[3], instructionData[4]);
+                    address2 = Functions.ConvertTo24Bit(instructionData[2], instructionData[3], instructionData[4]) + 1;
+                    address3 = Functions.ConvertTo24Bit(instructionData[2], instructionData[3], instructionData[4]) + 2;
+                    store = Functions.ConvertFrom24Bit(registers[instructionData[1]]);
+                    Memory.Write(address1, store[0]);
+                    Memory.Write(address2, store[1]);
+                    Memory.Write(address3, store[2]);
+                    break;
+                case 9: //LD4
+                    byte1 = Memory.Read(Functions.ConvertTo24Bit(instructionData[2], instructionData[3], instructionData[4]));
+                    byte2 = Memory.Read(Functions.ConvertTo24Bit(instructionData[2], instructionData[3], instructionData[4]) + 1);
+                    byte3 = Memory.Read(Functions.ConvertTo24Bit(instructionData[2], instructionData[3], instructionData[4]) + 2);
+                    byte4 = Memory.Read(Functions.ConvertTo24Bit(instructionData[2], instructionData[3], instructionData[4]) + 3);
+                    load = Functions.ConvertTo32Bit(byte1, byte2, byte3, byte4);
+                    registers[instructionData[1]] = load;
+                    break;
+                case 10: //ST4
+                    address1 = Functions.ConvertTo24Bit(instructionData[2], instructionData[3], instructionData[4]);
+                    address2 = Functions.ConvertTo24Bit(instructionData[2], instructionData[3], instructionData[4]) + 1;
+                    address3 = Functions.ConvertTo24Bit(instructionData[2], instructionData[3], instructionData[4]) + 2;
+                    address4 = Functions.ConvertTo24Bit(instructionData[2], instructionData[3], instructionData[4]) + 3;
+                    store = Functions.ConvertFrom32Bit(registers[instructionData[1]]);
+                    Memory.Write(address1, store[0]);
+                    Memory.Write(address2, store[1]);
+                    Memory.Write(address3, store[2]);
+                    Memory.Write(address4, store[3]);
+                    break;
+                case 11: //LDI1
+                    registers[instructionData[1]] = instructionData[2];
+                    break;
+                case 12: //LDI2
+                    registers[instructionData[1]] = Functions.ConvertTo16Bit(instructionData[2], instructionData[3]);
+                    break;
+                case 13: //LDI3
+                    registers[instructionData[1]] = Functions.ConvertTo24Bit(instructionData[2], instructionData[3], instructionData[4]);
+                    break;
+                case 14: //LDI4
+                    registers[instructionData[1]] = Functions.ConvertTo32Bit(instructionData[2], instructionData[3], instructionData[4], instructionData[5]);
+                    break;
+                case 15: //INC
+                    registers[instructionData[1]]++;
+                    break;
+                case 16: //DEC
+                    registers[instructionData[1]]--;
+                    break;
+                case 17: //MUL
+                    val = registers[instructionData[1]] * registers[instructionData[2]];
+                    registers[instructionData[3]] = val;
+                    break;
+                case 18: //DIV
+                    if (registers[instructionData[2]] != 0) {
+                        val = registers[instructionData[1]] / registers[instructionData[2]];
+                    } else {
+                        val = 0;
+                    }
+                    registers[instructionData[3]] = val;
+                    break;
+                case 19: //DIVR
+                    if (registers[instructionData[2]] != 0) {
+                        val = registers[instructionData[1]] % registers[instructionData[2]];
+                    } else {
+                        val = 0;
+                    }
+                    registers[instructionData[3]] = val;
+                    break;
+                case 20: //ADC
+                    val = registers[instructionData[1]] + registers[instructionData[2]];
+                    if (registers[35]==1) {
+                        val++;
+                    }
+                    registers[instructionData[3]] = val;
+                    break;
+                case 21: //SUC
+                    val = registers[instructionData[1]] - registers[instructionData[2]];
+                    if (registers[35] == 1) {
+                        val--;
+                    }
+                    registers[instructionData[3]] = val;
+                    break;
+                case 22: //NOP
+                    break;
+                case 23: //JMP
+                    registers[33] = Functions.ConvertTo24Bit(instructionData[1], instructionData[2], instructionData[3]);
+                    break;
+                case 24: //JSR
+                    bytes = Functions.ConvertFrom24Bit(registers[33]);
+                    Memory.Write(registers[34], bytes[0]);
+                    registers[34]++; 
+                    Memory.Write(registers[34], bytes[1]);
+                    registers[34]++;
+                    Memory.Write(registers[34], bytes[2]);
+                    registers[34]++;
+                    registers[33] = Functions.ConvertTo24Bit(instructionData[1], instructionData[2], instructionData[3]);
+                    break;
+                case 25: //RFS
+                    registers[34]--;
+                    byte3 = Memory.Read(registers[34]);
+                    registers[34]--;
+                    byte2 = Memory.Read(registers[34]);
+                    registers[34]--;
+                    byte1 = Memory.Read(registers[34]);
+                    registers[33] = Functions.ConvertTo24Bit(byte1, byte2, byte3);
+                    break;
+                case 26: //JG
+                    if (registers[instructionData[1]] > registers[instructionData[2]]) {
+                        registers[33] = Functions.ConvertTo24Bit(instructionData[3], instructionData[4], instructionData[5]);
+                    }
                     break;
             }
             cpuPhase = 0;

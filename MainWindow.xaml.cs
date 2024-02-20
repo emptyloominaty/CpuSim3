@@ -79,7 +79,7 @@ namespace CpuSim3 {
             PC_Text.Text = "PC: " + cpu.registers[33];
 
             Running.Text = "Running: " + cpu.cpuRunning;
-            DEBUG_Text.Text = "Instructions: " + cpu.instructionsDone+" - cycles: "+cpu.cyclesDone + " - clock: "+ cpu.clock;
+            DEBUG_Text.Text = "Instructions: " + cpu.instructionsDone+" - cycles: "+cpu.cyclesDone + " - IPC: "+Math.Round(cpu.instructionsDone / (cpu.cyclesDone + 1.0),2) +" - clock: "+ Functions.FormatClock(cpu.clock)+" | | | ";
 
             //Random random = new Random();
             //Color[] colors = new Color[] { Colors.Red, Colors.White, Colors.Black };

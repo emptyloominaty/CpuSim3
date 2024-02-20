@@ -33,10 +33,20 @@ namespace CpuSim3 {
             return (ushort)((a << 8) | b);
         }
 
-        public static byte[] ConvertFrom16Bit(ushort val) {
-            ushort b = (ushort)(val & 0xff);
-            ushort a = (ushort)((val >> 8) & 0xff);
+        public static byte[] ConvertFrom16Bit(uint val) {
+            uint b = (val & 0xff);
+            uint a = ((val >> 8) & 0xff);
             return new byte[] { (byte)a, (byte)b };
+        }
+
+        public static string FormatClock(long clock) {
+            if (clock > 1000000) {
+                return ((double)Math.Round((clock / 1000000.0) * 10) / 10) + "MHz";
+            } else if (clock > 1000) {
+                return ((double)Math.Round((clock / 1000.0) * 10) / 10) + "kHz";
+            } else {
+                return clock + "Hz";
+            }
         }
     }
 }

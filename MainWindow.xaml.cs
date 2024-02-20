@@ -62,7 +62,25 @@ namespace CpuSim3 {
             fpsText.Text = "FPS: " + fps + "";
             time1 = DateTime.Now.Ticks / ticks;
 
-     
+            Register0.Text = "Reg0: " + cpu.registers[0];
+            Register1.Text = "Reg1: " + cpu.registers[1];
+            Register2.Text = "Reg2: " + cpu.registers[2];
+            Register3.Text = "Reg3: " + cpu.registers[3];
+            Register4.Text = "Reg4: " + cpu.registers[4];
+
+            OP_Text.Text = "OP: " + cpu.op;
+            A_Text.Text = "A: " + cpu.instructionData[0];
+            B_Text.Text = "B: " + cpu.instructionData[1];
+            C_Text.Text = "C: " + cpu.instructionData[2];
+            D_Text.Text = "D: " + cpu.instructionData[3];
+            E_Text.Text = "E: " + cpu.instructionData[4];
+
+            SP_Text.Text = "SP: " + cpu.registers[34];
+            PC_Text.Text = "PC: " + cpu.registers[33];
+
+            Running.Text = "Running: " + cpu.cpuRunning;
+            DEBUG_Text.Text = "Instructions: " + cpu.instructionsDone+" - cycles: "+cpu.cyclesDone + " - clock: "+ cpu.clock;
+
             //Random random = new Random();
             //Color[] colors = new Color[] { Colors.Red, Colors.White, Colors.Black };
             //int randomNumber = random.Next(0, 3);

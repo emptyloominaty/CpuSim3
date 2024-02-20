@@ -101,6 +101,25 @@ namespace CpuSim3{
             codes[77] = new OpCode("CBT8", 2, 6);
             codes[78] = new OpCode("C8TB", 2, 6);
 
+            //only assembler auto optimize
+            codes[79] = new OpCode("SJG", 4, 4);
+            codes[80] = new OpCode("SJL", 4, 4);
+            codes[81] = new OpCode("SJE", 4, 4);
+            codes[82] = new OpCode("SJC", 2, 4);
+            codes[83] = new OpCode("SJNG", 4, 4);
+            codes[84] = new OpCode("SJNL", 4, 4);
+            codes[85] = new OpCode("SJNE", 4, 4);
+            codes[86] = new OpCode("SJNC", 2, 4);
+            codes[87] = new OpCode("SJMP", 2, 2);
+            //--
+            codes[88] = new OpCode("JGR", 4, 4);
+            codes[89] = new OpCode("JLR", 4, 4);
+            codes[90] = new OpCode("JER", 4, 4);
+            codes[91] = new OpCode("JNGR", 4, 4);
+            codes[92] = new OpCode("JNLR", 4, 4);
+            codes[93] = new OpCode("JNER", 4, 4);
+            codes[94] = new OpCode("JMPR", 2, 2);
+
             codes[100] = new OpCode("FLD", 5, 4);
             codes[101] = new OpCode("FST", 5, 4);
             codes[102] = new OpCode("FADD", 4, 8);

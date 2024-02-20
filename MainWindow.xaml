@@ -7,7 +7,37 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="900" Width="1600">
     <Grid>
-        <TextBlock Name="fpsText" HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" Text="Fps:" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
+        <TextBlock Name="fpsText" HorizontalAlignment="Left" Margin="20,10,0,0" TextWrapping="Wrap" Text="Fps: " VerticalAlignment="Top"/>
+
+        <TextBlock Name="Running" HorizontalAlignment="Left" Margin="200,40,0,0" TextWrapping="Wrap" Text="Running: "/>
+        <TextBlock Name="PC_Text" HorizontalAlignment="Left" Margin="300,40,0,0" TextWrapping="Wrap" Text="PC: "/>
+        <TextBlock Name="SP_Text" HorizontalAlignment="Left" Margin="400,40,0,0" TextWrapping="Wrap" Text="SP: "/>
+        <TextBlock Name="DEBUG_Text" HorizontalAlignment="Left" Margin="200,80,0,0" TextWrapping="Wrap" Text="DEBUG: "/>
+
+
+
+        <TextBlock Name="OP_Text" HorizontalAlignment="Left" Margin="200,10,0,0" TextWrapping="Wrap" Text="OP: "/>
+        <TextBlock Name="A_Text" HorizontalAlignment="Left" Margin="300,10,0,0" TextWrapping="Wrap" Text="A: "/>
+        <TextBlock Name="B_Text" HorizontalAlignment="Left" Margin="400,10,0,0" TextWrapping="Wrap" Text="B: "/>
+        <TextBlock Name="C_Text" HorizontalAlignment="Left" Margin="500,10,0,0" TextWrapping="Wrap" Text="C: "/>
+        <TextBlock Name="D_Text" HorizontalAlignment="Left" Margin="600,10,0,0" TextWrapping="Wrap" Text="D: "/>
+        <TextBlock Name="E_Text" HorizontalAlignment="Left" Margin="700,10,0,0" TextWrapping="Wrap" Text="E: "/>
+
+
+        <TextBlock Name="Register0" HorizontalAlignment="Left" Margin="20,30,0,0" TextWrapping="Wrap" Text="Reg0: "/>
+        <TextBlock Name="Register1" HorizontalAlignment="Left" Margin="20,50,0,0" TextWrapping="Wrap" Text="Reg1: "/>
+        <TextBlock Name="Register2" HorizontalAlignment="Left" Margin="20,70,0,0" TextWrapping="Wrap" Text="Reg2: "/>
+        <TextBlock Name="Register3" HorizontalAlignment="Left" Margin="20,90,0,0" TextWrapping="Wrap" Text="Reg3: "/>
+        <TextBlock Name="Register4" HorizontalAlignment="Left" Margin="20,110,0,0" TextWrapping="Wrap" Text="Reg4: "/>
+        <TextBlock Name="Register5" HorizontalAlignment="Left" Margin="20,130,0,0" TextWrapping="Wrap" Text="Reg5: "/>
+        <TextBlock Name="Register6" HorizontalAlignment="Left" Margin="20,150,0,0" TextWrapping="Wrap" Text="Reg6: "/>
+        <TextBlock Name="Register7" HorizontalAlignment="Left" Margin="20,170,0,0" TextWrapping="Wrap" Text="Reg7: "/>
+        <TextBlock Name="Register8" HorizontalAlignment="Left" Margin="20,190,0,0" TextWrapping="Wrap" Text="Reg8: "/>
+        <TextBlock Name="Register9" HorizontalAlignment="Left" Margin="20,210,0,0" TextWrapping="Wrap" Text="Reg9: "/>
+        
+        
+
+
         <Canvas Height="600" Width="800" Name="myCanvas" Margin="100,250,100,100" Grid.ColumnSpan="2"/>
 
     </Grid>

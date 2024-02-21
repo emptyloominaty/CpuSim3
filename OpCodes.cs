@@ -38,9 +38,9 @@ namespace CpuSim3{
             codes[14] = new OpCode("LDI4", 6, 4);
             codes[15] = new OpCode("INC", 2, 3);
             codes[16] = new OpCode("DEC", 2, 3);
-            codes[17] = new OpCode("MUL", 4, 12);
-            codes[18] = new OpCode("DIV", 4, 25);
-            codes[19] = new OpCode("DIVR", 4, 25);
+            codes[17] = new OpCode("MUL", 4, 9);
+            codes[18] = new OpCode("DIV", 4, 18);
+            codes[19] = new OpCode("DIVR", 4, 18);
             codes[20] = new OpCode("ADC", 4, 4);
             codes[21] = new OpCode("SUC", 4, 4);
             codes[22] = new OpCode("NOP", 1, 1);
@@ -74,8 +74,8 @@ namespace CpuSim3{
             codes[50] = new OpCode("SUBI2", 4, 3);
             codes[51] = new OpCode("SUBI3", 5, 4);
             codes[52] = new OpCode("SUBI4", 6, 4);
-            codes[53] = new OpCode("MULI1", 3, 14);
-            codes[54] = new OpCode("DIVI1", 3, 24);
+            codes[53] = new OpCode("MULI1", 3, 9);
+            codes[54] = new OpCode("DIVI1", 3, 18);
             codes[55] = new OpCode("SEI", 1, 1);
             codes[56] = new OpCode("SDI", 1, 1);
             codes[57] = new OpCode("INT", 2, 5);

@@ -7,38 +7,112 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="900" Width="1600">
     <Grid>
-        <TextBlock Name="fpsText" HorizontalAlignment="Left" Margin="20,10,0,0" TextWrapping="Wrap" Text="Fps: " VerticalAlignment="Top"/>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="80*"/>
+            <RowDefinition Height="97*"/>
+        </Grid.RowDefinitions>
+        <TextBlock Name="fpsText" HorizontalAlignment="Left" Margin="20,5,0,0" TextWrapping="Wrap" Text="Fps: " VerticalAlignment="Top"/>
 
-        <TextBlock Name="Running" HorizontalAlignment="Left" Margin="200,40,0,0" TextWrapping="Wrap" Text="Running: "/>
-        <TextBlock Name="PC_Text" HorizontalAlignment="Left" Margin="300,40,0,0" TextWrapping="Wrap" Text="PC: "/>
-        <TextBlock Name="SP_Text" HorizontalAlignment="Left" Margin="400,40,0,0" TextWrapping="Wrap" Text="SP: "/>
-        <TextBlock Name="DEBUG_Text" HorizontalAlignment="Left" Margin="200,80,0,0" TextWrapping="Wrap" Text="DEBUG: "/>
+        <TextBlock Name="Running" HorizontalAlignment="Left" Margin="150,140,0,-100" TextWrapping="Wrap" Text="Running: " Grid.RowSpan="2"/>
+        <TextBlock Name="PC_Text" HorizontalAlignment="Left" Margin="20,240,0,-184" TextWrapping="Wrap" Text="PC: " Grid.RowSpan="2"/>
+        <TextBlock Name="SP_Text" HorizontalAlignment="Left" Margin="210,240,0,-184" TextWrapping="Wrap" Text="SP: " Grid.RowSpan="2"/>
+        <TextBlock Name="DEBUG_Text" HorizontalAlignment="Left" Margin="20,31,0,49" TextWrapping="Wrap" Text="DEBUG: " Grid.RowSpan="2"/>
+        <TextBlock Name="Clock_Text" HorizontalAlignment="Left" Margin="80,140,0,-49" TextWrapping="Wrap" Text="0" Grid.RowSpan="2"/>
+
+        <TextBlock Name="IPC_Text" HorizontalAlignment="Left" Margin="20,60,0,-49" TextWrapping="Wrap" Text="IPC:" Grid.RowSpan="2"/>
+        <TextBlock Name="Instructions_Done_Text" HorizontalAlignment="Left" Margin="20,85,0,-49" TextWrapping="Wrap" Text="Instructions Done:" Grid.RowSpan="2"/>
+        <TextBlock Name="Cycles_Done_Text" HorizontalAlignment="Left" Margin="20,110,0,-49" TextWrapping="Wrap" Text="Cycles Done: " Grid.RowSpan="2"/>
+
+        <TextBlock Name="Usage_Text" HorizontalAlignment="Left" Margin="20,195,0,-49" TextWrapping="Wrap" Text="Cpu Usage: 0%" Grid.RowSpan="2"/>
+
+        <TextBlock Name="OP_Text" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="310,20,0,0"  Text="OP: " Height="30"/>
+        <TextBlock Name="OPString_Text" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="450,20,0,0" Text="TEST" Height="30"/>
+        <TextBlock Name="A_Text" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="270,50,0,0" TextWrapping="Wrap" Text="A " Height="30"/>
+        <TextBlock Name="B_Text" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="330,50,0,0" TextWrapping="Wrap" Text="B " Height="30"/>
+        <TextBlock Name="C_Text" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="390,50,0,0" TextWrapping="Wrap" Text="C " Height="30"/>
+        <TextBlock Name="D_Text" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="450,50,0,0" TextWrapping="Wrap" Text="D " Height="30"/>
+        <TextBlock Name="E_Text" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="510,50,0,0" TextWrapping="Wrap" Text="E " Height="30"/>
+
+        <StackPanel Orientation="Horizontal" Height="350" Width="600" HorizontalAlignment="Left" Margin="0,267,0,267" Grid.RowSpan="2" >
+            <StackPanel  Width="190">
+                <TextBlock Name="Register0" HorizontalAlignment="Left" Margin="20,4,0,0" TextWrapping="Wrap" Text="r0: "/>
+                <TextBlock Name="Register1" HorizontalAlignment="Left" Margin="20,4,0,0" TextWrapping="Wrap" Text="r1: "/>
+                <TextBlock Name="Register2" HorizontalAlignment="Left" Margin="20,4,0,0" TextWrapping="Wrap" Text="r2: "/>
+                <TextBlock Name="Register3" HorizontalAlignment="Left" Margin="20,4,0,0" TextWrapping="Wrap" Text="r3: "/>
+                <TextBlock Name="Register4" HorizontalAlignment="Left" Margin="20,4,0,0" TextWrapping="Wrap" Text="r4: "/>
+                <TextBlock Name="Register5" HorizontalAlignment="Left" Margin="20,4,0,0" TextWrapping="Wrap" Text="r5: "/>
+                <TextBlock Name="Register6" HorizontalAlignment="Left" Margin="20,4,0,0" TextWrapping="Wrap" Text="r6: "/>
+                <TextBlock Name="Register7" HorizontalAlignment="Left" Margin="20,4,0,0" TextWrapping="Wrap" Text="r7: "/>
+                <TextBlock Name="Register8" HorizontalAlignment="Left" Margin="20,4,0,0" TextWrapping="Wrap" Text="r8: "/>
+                <TextBlock Name="Register9" HorizontalAlignment="Left" Margin="20,4,0,0" TextWrapping="Wrap" Text="r9: "/>
+                <TextBlock Name="Register10" HorizontalAlignment="Left" Margin="20,4,0,0" TextWrapping="Wrap" Text="r10: "/>
+            </StackPanel>
+            <StackPanel  Width="190">
+              
+                <TextBlock Name="Register11" HorizontalAlignment="Left" Margin="20,4,0,0" TextWrapping="Wrap" Text="r11: "/>
+                <TextBlock Name="Register12" HorizontalAlignment="Left" Margin="20,4,0,0" TextWrapping="Wrap" Text="r12: "/>
+                <TextBlock Name="Register13" HorizontalAlignment="Left" Margin="20,4,0,0" TextWrapping="Wrap" Text="r13: "/>
+                <TextBlock Name="Register14" HorizontalAlignment="Left" Margin="20,4,0,0" TextWrapping="Wrap" Text="r14: "/>
+                <TextBlock Name="Register15" HorizontalAlignment="Left" Margin="20,4,0,0" TextWrapping="Wrap" Text="r15: "/>
+                <TextBlock Name="Register16" HorizontalAlignment="Left" Margin="20,4,0,0" TextWrapping="Wrap" Text="r16: "/>
+                <TextBlock Name="Register17" HorizontalAlignment="Left" Margin="20,4,0,0" TextWrapping="Wrap" Text="r17: "/>
+                <TextBlock Name="Register18" HorizontalAlignment="Left" Margin="20,4,0,0" TextWrapping="Wrap" Text="r18: "/>
+                <TextBlock Name="Register19" HorizontalAlignment="Left" Margin="20,4,0,0" TextWrapping="Wrap" Text="r19: "/>
+                <TextBlock Name="Register20" HorizontalAlignment="Left" Margin="20,4,0,0" TextWrapping="Wrap" Text="r20: "/>
+                <TextBlock Name="Register21" HorizontalAlignment="Left" Margin="20,4,0,0" TextWrapping="Wrap" Text="r21: "/>
+            </StackPanel>
+            <StackPanel Width="190">
+                <TextBlock Name="Register22" HorizontalAlignment="Left" Margin="20,4,0,0" TextWrapping="Wrap" Text="r22: "/>
+                <TextBlock Name="Register23" HorizontalAlignment="Left" Margin="20,4,0,0" TextWrapping="Wrap" Text="r23: "/>
+                <TextBlock Name="Register24" HorizontalAlignment="Left" Margin="20,4,0,0" TextWrapping="Wrap" Text="r24: "/>
+                <TextBlock Name="Register25" HorizontalAlignment="Left" Margin="20,4,0,0" TextWrapping="Wrap" Text="r25: "/>
+                <TextBlock Name="Register26" HorizontalAlignment="Left" Margin="20,4,0,0" TextWrapping="Wrap" Text="r26: "/>
+                <TextBlock Name="Register27" HorizontalAlignment="Left" Margin="20,4,0,0" TextWrapping="Wrap" Text="r27: "/>
+                <TextBlock Name="Register28" HorizontalAlignment="Left" Margin="20,4,0,0" TextWrapping="Wrap" Text="r28: "/>
+                <TextBlock Name="Register29" HorizontalAlignment="Left" Margin="20,4,0,0" TextWrapping="Wrap" Text="r29: "/>
+                <TextBlock Name="Register30" HorizontalAlignment="Left" Margin="20,4,0,0" TextWrapping="Wrap" Text="r30: "/>
+                <TextBlock Name="Register31" HorizontalAlignment="Left" Margin="20,4,0,0" TextWrapping="Wrap" Text="r31: "/>
+            </StackPanel>
+        </StackPanel>
 
 
 
-        <TextBlock Name="OP_Text" HorizontalAlignment="Left" Margin="200,10,0,0" TextWrapping="Wrap" Text="OP: "/>
-        <TextBlock Name="A_Text" HorizontalAlignment="Left" Margin="300,10,0,0" TextWrapping="Wrap" Text="A: "/>
-        <TextBlock Name="B_Text" HorizontalAlignment="Left" Margin="400,10,0,0" TextWrapping="Wrap" Text="B: "/>
-        <TextBlock Name="C_Text" HorizontalAlignment="Left" Margin="500,10,0,0" TextWrapping="Wrap" Text="C: "/>
-        <TextBlock Name="D_Text" HorizontalAlignment="Left" Margin="600,10,0,0" TextWrapping="Wrap" Text="D: "/>
-        <TextBlock Name="E_Text" HorizontalAlignment="Left" Margin="700,10,0,0" TextWrapping="Wrap" Text="E: "/>
+        <!--<Canvas Height="300" Width="400" Name="myCanvas" Margin="1190,179,10,5" Grid.Row="1" />-->
+        <TextBox HorizontalAlignment="Left" Margin="20,169,0,0" TextWrapping="Wrap" Text="1000000" VerticalAlignment="Top" Width="120" TextChanged="TextBox_TextChanged"/>
+        <Button Name="BtnCpuToggle" Content="Start" HorizontalAlignment="Left" Margin="150,168,0,0" Click="ToggleCpu" VerticalAlignment="Top"/>
+        <TextBlock HorizontalAlignment="Left" Margin="20,140,0,0" TextWrapping="Wrap" Text="Clock:" VerticalAlignment="Top"/>
+
+        <TextBlock  HorizontalAlignment="Left"  VerticalAlignment="Bottom" Name="MemoryLine0" Margin="20,0,0,180" Width="600" Height="30" Grid.Row="1" >
+         0x000000: 00 FF F0 F0 FF FF FF FF 00 00 00 00 FF FF FF FF
+        </TextBlock>
+        <TextBlock  HorizontalAlignment="Left" VerticalAlignment="Bottom" Name="MemoryLine1" Margin="20,0,0,160" Width="600" Height="30" Grid.Row="1" >
+         0x000010: 00 FF F0 F0 FF FF FF FF 00 00 00 00 FF FF FF FF
+        </TextBlock>
+        <TextBlock HorizontalAlignment="Left" VerticalAlignment="Bottom" Name="MemoryLine2" Margin="20,0,0,140" Width="600" Height="30" Grid.Row="1" >
+         0x000020: 00 FF F0 F0 FF FF FF FF 00 00 00 00 FF FF FF FF
+        </TextBlock>
+        <TextBlock HorizontalAlignment="Left" VerticalAlignment="Bottom" Name="MemoryLine3" Margin="20,0,0,120" Width="600" Height="30" Grid.Row="1" >
+         0x000030: 00 FF F0 F0 FF FF FF FF 00 00 00 00 FF FF FF FF
+        </TextBlock>
+        <TextBlock HorizontalAlignment="Left" VerticalAlignment="Bottom" Name="MemoryLine4" Margin="20,0,0,100" Width="600" Height="30" Grid.Row="1" >
+    0x000040: 00 FF F0 F0 FF FF FF FF 00 00 00 00 FF FF FF FF
+        </TextBlock>
+        <TextBlock HorizontalAlignment="Left" VerticalAlignment="Bottom" Name="MemoryLine5" Margin="20,0,0,80" Width="600" Height="30" Grid.Row="1" >
+    0x000050: 00 FF F0 F0 FF FF FF FF 00 00 00 00 FF FF FF FF
+        </TextBlock>
+        <TextBlock HorizontalAlignment="Left" VerticalAlignment="Bottom" Name="MemoryLine6" Margin="20,0,0,60" Width="600" Height="30" Grid.Row="1" >
+    0x000060: 00 FF F0 F0 FF FF FF FF 00 00 00 00 FF FF FF FF
+        </TextBlock>
+        <TextBlock HorizontalAlignment="Left" VerticalAlignment="Bottom" Name="MemoryLine7" Margin="20,0,0,40" Width="600" Height="30" Grid.Row="1" >
+    0x000070: 00 FF F0 F0 FF FF FF FF 00 00 00 00 FF FF FF FF
+        </TextBlock>
+        <TextBox HorizontalAlignment="Left" Margin="20,237,0,0" TextWrapping="Wrap" Text="0x000000" VerticalAlignment="Top" Width="90" TextChanged="TextBox_MemoryViewer" Grid.Row="1"/>
 
 
-        <TextBlock Name="Register0" HorizontalAlignment="Left" Margin="20,30,0,0" TextWrapping="Wrap" Text="Reg0: "/>
-        <TextBlock Name="Register1" HorizontalAlignment="Left" Margin="20,50,0,0" TextWrapping="Wrap" Text="Reg1: "/>
-        <TextBlock Name="Register2" HorizontalAlignment="Left" Margin="20,70,0,0" TextWrapping="Wrap" Text="Reg2: "/>
-        <TextBlock Name="Register3" HorizontalAlignment="Left" Margin="20,90,0,0" TextWrapping="Wrap" Text="Reg3: "/>
-        <TextBlock Name="Register4" HorizontalAlignment="Left" Margin="20,110,0,0" TextWrapping="Wrap" Text="Reg4: "/>
-        <TextBlock Name="Register5" HorizontalAlignment="Left" Margin="20,130,0,0" TextWrapping="Wrap" Text="Reg5: "/>
-        <TextBlock Name="Register6" HorizontalAlignment="Left" Margin="20,150,0,0" TextWrapping="Wrap" Text="Reg6: "/>
-        <TextBlock Name="Register7" HorizontalAlignment="Left" Margin="20,170,0,0" TextWrapping="Wrap" Text="Reg7: "/>
-        <TextBlock Name="Register8" HorizontalAlignment="Left" Margin="20,190,0,0" TextWrapping="Wrap" Text="Reg8: "/>
-        <TextBlock Name="Register9" HorizontalAlignment="Left" Margin="20,210,0,0" TextWrapping="Wrap" Text="Reg9: "/>
-        
-        
+        <TextBox  Margin="0,300,0,0" TextWrapping="Wrap" Text="" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" AcceptsReturn="True" HorizontalAlignment="Center" VerticalAlignment="Center" Width="350" Height="502" Grid.RowSpan="2" TextChanged="TextBox_TextChanged_1"/>
 
 
-        <Canvas Height="600" Width="800" Name="myCanvas" Margin="100,250,100,100" Grid.ColumnSpan="2"/>
+
 
     </Grid>
 </Window>

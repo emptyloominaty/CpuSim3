@@ -124,7 +124,7 @@ namespace CpuSim3 {
             }
             Usage_Text.Text = "CPU Usage: " + cpuUsage + "%";
 
-            DEBUG_Text.Text = " ";
+            DEBUG_Text.Text = "";
 
             //Random random = new Random();
             //Color[] colors = new Color[] { Colors.Red, Colors.White, Colors.Black };
@@ -233,9 +233,12 @@ namespace CpuSim3 {
             }
         }
 
-        //TODO:assembler
-        private void TextBox_TextChanged_1(object sender, TextChangedEventArgs e) {
+        private void Btn_LoadASM(object sender, RoutedEventArgs e) {
+            Assembler.Assemble(CodeEditor.Text, opCodes); //TODO code type
+        }
 
+        private void Btn_LoadMC(object sender, RoutedEventArgs e) {
+            Assembler.LoadMachineCode(CodeEditor.Text, 7340032); //TODO:startAddress
         }
     }
 }

@@ -19,7 +19,9 @@ namespace CpuSim3{
 
     public class OpCodes{
         public OpCode[] codes = new OpCode[256];
-        
+
+        public Dictionary<string, byte> names = new Dictionary<string, byte>();
+
         public OpCodes() {
             codes[0] = new OpCode("STOP", 1, 1); 
             codes[1] = new OpCode("ADD", 4, 4); 
@@ -126,6 +128,13 @@ namespace CpuSim3{
             codes[103] = new OpCode("FSUB", 4, 8);
             codes[104] = new OpCode("FMUL", 4, 16);
             codes[105] = new OpCode("FDIV", 4, 73);
+
+            for (int i = 0; i < codes.Length; i++) {
+                if (codes[i]!=null) {
+                    names[codes[i].name] = (byte)i;
+                }
+                
+            }
         }
     }
 }

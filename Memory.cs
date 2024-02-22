@@ -9,6 +9,12 @@ namespace CpuSim3 {
         public static byte[] Data = new byte[16777216];
         public static bool[] DataCanWriteArray = new bool[16777216];
         static Memory() {
+            Init();
+        }
+
+        public static void Init() {
+            Data = new byte[16777216];
+            DataCanWriteArray = new bool[16777216];
             for (int i = 0; i < Data.Length; i++) {
                 Data[i] = 0;
                 DataCanWriteArray[i] = true; //TODO
@@ -16,7 +22,7 @@ namespace CpuSim3 {
 
             //TEST CODE
             Write(7340032, 3, true);
-            Write(7340033, 0, true); 
+            Write(7340033, 0, true);
             Write(7340034, 0x70, true);
             Write(7340035, 0, true);
             Write(7340036, 0, true);
@@ -38,9 +44,9 @@ namespace CpuSim3 {
             Write(7340048, 14, true);
             Write(7340049, 4, true);
             Write(7340050, 0, true);
-            Write(7340051, 1, true); 
-            Write(7340052, 255, true); 
-            Write(7340053, 255, true); 
+            Write(7340051, 1, true);
+            Write(7340052, 255, true);
+            Write(7340053, 255, true);
 
             Write(7340054, 26, true);
             Write(7340055, 4, true);
@@ -50,7 +56,7 @@ namespace CpuSim3 {
             Write(7340059, 0, true);
 
             Write(7340060, 24, true);
-            Write(7340061, 0x70, true);   
+            Write(7340061, 0x70, true);
             Write(7340062, 0x00, true);
             Write(7340063, 0x2F, true);
 
@@ -58,9 +64,9 @@ namespace CpuSim3 {
 
             Write(7340065, 13, true);
             Write(7340066, 0, true);
-            Write(7340067, 25, true); 
-            Write(7340068, 255, true); 
-            Write(7340069, 255, true); 
+            Write(7340067, 25, true);
+            Write(7340068, 255, true);
+            Write(7340069, 255, true);
 
             Write(7340070, 15, true);
             Write(7340071, 1, true);
@@ -78,24 +84,6 @@ namespace CpuSim3 {
             Write(7340080, 0x70, true);
             Write(7340081, 0x00, true);
             Write(7340082, 0x21, true);
-            /*
-            Write(7340083, , true);
-            Write(7340084, , true);
-            Write(7340085, , true);
-            Write(7340086, , true);
-            Write(7340087, , true);
-            Write(7340088, , true);
-            Write(7340089, , true);
-            Write(7340090, , true);
-            Write(7340091, , true);
-            Write(7340092, , true);
-            Write(7340093, , true);
-            Write(7340094, , true);
-            Write(7340095, , true);
-            Write(7340096, , true);*/
-
-
-
         }
 
         public static byte Read(uint address) {

@@ -48,5 +48,15 @@ namespace CpuSim3 {
                 return clock + "Hz";
             }
         }
+
+        public static bool IsNumeric(string str) {
+            double result;
+            return double.TryParse(str, out result);
+        }
+
+        public static int HexToDec(string str) {
+            return Convert.ToInt32(str, 16);
+        }
+
     }
 }

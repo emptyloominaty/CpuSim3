@@ -38,25 +38,31 @@ namespace CpuSim3 {
 
             lines = code.Split("\r\n");
 
+            AsVar[] consts = new AsVar[lines.Length];
             AsVar[] vars = new AsVar[lines.Length];
             AsInstruction[] instructions = new AsInstruction[lines.Length];
             AsFunction[] functions = new AsFunction[lines.Length];
 
             Dictionary<string, AsFunction> functionsMap = new Dictionary<string, AsFunction>();
             Dictionary<string, AsVar> varsMap = new Dictionary<string, AsVar>();
+            Dictionary<string, AsVar> constsMap = new Dictionary<string, AsVar>();
 
             uint codeStartAddress = 7340032;
+            uint varStartAddress = 0x000300;
             if (codeType == "OS") {
                 codeStartAddress = 7340032;
+                varStartAddress = 0x000300;
             } else if (codeType == "App") {
                 codeStartAddress = 4194304;
+                varStartAddress = 0x004000;
             }
 
+            int constIdx = 0;
             int varIdx = 0;
             int instructionIdx = 0;
             int functionIdx = 0;
 
-            uint bytes = 0;
+            uint bytes = 4;
 
             for (int i = 0; i < lines.Length; i++) {
                 string[] line;
@@ -68,11 +74,7 @@ namespace CpuSim3 {
 
                 bool func = line[0].Contains("<") && line[0].Contains(">");
 
-                if (line[0] == "VAR" || line[0] == "var") {
-                    // VAR 1 name1 25
-                    // VAR 2 name2 500
-                    // VAR 3 name3 100000
-
+                if (line[0] == "CONST" || line[0] == "const") {
                     string[] chars;
                     string val = line[3];
                     int val2;
@@ -91,10 +93,36 @@ namespace CpuSim3 {
                         val2 = Convert.ToInt32(val);
                     }
                     
-                    vars[varIdx] = new AsVar(name, val2, 0, Convert.ToByte(line[1]));
-                    varsMap.Add(name, vars[varIdx]);
-                    varIdx++;
-                } else if (func) { //function
+                    consts[constIdx] = new AsVar(name, val2, 0, Convert.ToByte(line[1]));
+                    constsMap.Add(name, consts[constIdx]);
+                    constIdx++;
+                } else if (line[0] == "VAR" || line[0] == "var") {
+                        // VAR 1 name1 25
+                        // VAR 2 name2 500
+                        // VAR 3 name3 100000
+
+                        string[] chars;
+                        string val = line[3];
+                        int val2;
+                        bool hex = false;
+                        name = line[2];
+                        chars = line[3].Select(c => c.ToString()).ToArray();
+                        if (chars.Length > 2) {
+                            if (chars[0] == "0" && chars[1] == "x") {
+                                hex = true;
+                                val = line[3].Substring(2);
+                            }
+                        }
+                        if (hex) {
+                            val2 = Convert.ToInt32(val, 16);
+                        } else {
+                            val2 = Convert.ToInt32(val);
+                        }
+
+                        vars[varIdx] = new AsVar(name, val2, 0, Convert.ToByte(line[1]));
+                        varsMap.Add(name, vars[varIdx]);
+                        varIdx++;
+                    } else if (func) { //function
                     string functionName = line[0].Replace("<", "").Replace(">", "");
                     functions[functionIdx] = new AsFunction(functionName, i, codeStartAddress + bytes);
                     functionsMap.Add(functionName, functions[functionIdx]);
@@ -151,8 +179,47 @@ namespace CpuSim3 {
                 }
             }
 
+
+            uint constsBytes = 0;
+            uint constsAddress = codeStartAddress + bytes;
+            for (int i = 0; i < constIdx; i++) {
+                //calc consts addresses
+                if (consts[i].address == 0) {
+                    consts[i].address = constsAddress + constsBytes;
+                    constsBytes += consts[i].bytes;
+                }
+ 
+                //write consts to memory(rom)
+                byte[] store;
+                if (consts[i].bytes == 1) {
+                    Memory.Write(consts[i].address, (byte)consts[i].value);
+                } else if (consts[i].bytes == 2) {
+                    store = Functions.ConvertFrom16Bit((uint)consts[i].value);
+                    Memory.Write(consts[i].address, store[0], true);
+                    Memory.Write(consts[i].address + 1, store[1], true);
+                } else if (consts[i].bytes == 3) {
+                    store = Functions.ConvertFrom24Bit((uint)consts[i].value);
+                    Memory.Write(consts[i].address, store[0], true);
+                    Memory.Write(consts[i].address + 1, store[1], true);
+                    Memory.Write(consts[i].address + 2, store[2], true);
+                } else if (consts[i].bytes == 4) {
+                    store = Functions.ConvertFrom32Bit((uint)consts[i].value);
+                    Memory.Write(consts[i].address, store[0], true);
+                    Memory.Write(consts[i].address + 1, store[1], true);
+                    Memory.Write(consts[i].address + 2, store[2], true);
+                    Memory.Write(consts[i].address + 3, store[3], true);
+                }
+            }
+
+            uint ldibytes = bytes + constsBytes;
+            Memory.Write(codeStartAddress, 24);
+            byte[] varInitFunctionAddress = Functions.ConvertFrom24Bit(codeStartAddress + ldibytes);
+            Memory.Write(codeStartAddress + 1, varInitFunctionAddress[0]);
+            Memory.Write(codeStartAddress + 2, varInitFunctionAddress[1]);
+            Memory.Write(codeStartAddress + 3, varInitFunctionAddress[2]);
+
             uint varsBytes = 0;
-            uint varsAddress = codeStartAddress + bytes;
+            uint varsAddress = varStartAddress;
             for (int i = 0; i < varIdx; i++) {
                 //calc vars addresses
                 if (vars[i].address == 0) {
@@ -160,20 +227,29 @@ namespace CpuSim3 {
                     varsBytes += vars[i].bytes;
                 }
 
-                //write vars to memory
+                //write vars to memory (ram)
                 byte[] store;
-                if (vars[i].bytes == 1) {
-                    Memory.Write(vars[i].address, (byte)vars[i].value);
-                } else if (vars[i].bytes == 2) {
+                if (vars[i].bytes == 1) { //LDI1
+                    Memory.Write(codeStartAddress + ldibytes, 11); //LDI1
+                    Memory.Write(codeStartAddress + ldibytes + 1, 0);
+                    Memory.Write(codeStartAddress + ldibytes + 2, (byte)vars[i].value);
+                    Memory.Write(codeStartAddress + ldibytes + 3, 4); //ST1
+                    Memory.Write(codeStartAddress + ldibytes + 4, 0);
+                    byte[] varaddress = Functions.ConvertFrom24Bit(vars[i].address);
+                    Memory.Write(codeStartAddress + ldibytes + 5, varaddress[0]);
+                    Memory.Write(codeStartAddress + ldibytes + 6, varaddress[1]);
+                    Memory.Write(codeStartAddress + ldibytes + 7, varaddress[2]);
+                    ldibytes += 8;
+                } else if (vars[i].bytes == 2) {  //LDI2
                     store = Functions.ConvertFrom16Bit((uint)vars[i].value);
-                    Memory.Write(vars[i].address, store[0],true);
+                    Memory.Write(vars[i].address, store[0], true);
                     Memory.Write(vars[i].address + 1, store[1], true);
-                } else if (vars[i].bytes == 3) {
+                } else if (vars[i].bytes == 3) {  //LDI3
                     store = Functions.ConvertFrom24Bit((uint)vars[i].value);
                     Memory.Write(vars[i].address, store[0], true);
                     Memory.Write(vars[i].address + 1, store[1], true);
                     Memory.Write(vars[i].address + 2, store[2], true);
-                } else if (vars[i].bytes == 4) {
+                } else if (vars[i].bytes == 4) {  //LDI4
                     store = Functions.ConvertFrom32Bit((uint)vars[i].value);
                     Memory.Write(vars[i].address, store[0], true);
                     Memory.Write(vars[i].address + 1, store[1], true);
@@ -181,6 +257,10 @@ namespace CpuSim3 {
                     Memory.Write(vars[i].address + 3, store[3], true);
                 }
             }
+
+            Memory.Write(codeStartAddress + ldibytes, 25);
+
+
             //write instruction to memory
             for (int i = 0; i < instructionIdx; i++) {
                 byte instructionBytes = instructions[i].bytes;
@@ -234,10 +314,19 @@ namespace CpuSim3 {
                             } else if (!(iname.Equals("JSR") || iname.Equals("JG") || iname.Equals("JNG") || iname.Equals("JL") || iname.Equals("JNL")
                                       || iname.Equals("JC") || iname.Equals("JNC") || iname.Equals("JE") || iname.Equals("JNE") || iname.Equals("JMP"))) {
                                 //VAR MEM ADDRESS
-                                byte[] varAddress = Functions.ConvertFrom24Bit(varsMap[instructions[i].values[j]].address);
-                                Memory.Write((uint)(instructions[i].address + k), varAddress[0], true);
-                                Memory.Write((uint)(instructions[i].address + k + 1), varAddress[1], true);
-                                Memory.Write((uint)(instructions[i].address + k + 2), varAddress[2], true);
+                                Debug.WriteLine(instructions[i].values[j]);
+                                if (varsMap.ContainsKey(instructions[i].values[j])) {
+                                    byte[] varAddress = Functions.ConvertFrom24Bit(varsMap[instructions[i].values[j]].address);
+                                    Memory.Write((uint)(instructions[i].address + k), varAddress[0], true);
+                                    Memory.Write((uint)(instructions[i].address + k + 1), varAddress[1], true);
+                                    Memory.Write((uint)(instructions[i].address + k + 2), varAddress[2], true);
+                                } else if (constsMap.ContainsKey(instructions[i].values[j])) {
+                                    byte[] constAddress = Functions.ConvertFrom24Bit(constsMap[instructions[i].values[j]].address);
+                                    Memory.Write((uint)(instructions[i].address + k), constAddress[0], true);
+                                    Memory.Write((uint)(instructions[i].address + k + 1), constAddress[1], true);
+                                    Memory.Write((uint)(instructions[i].address + k + 2), constAddress[2], true);
+                                }
+
                             } else {
                                 //FUNCTIONS (JUMPS)
                                 byte[] jumpAddress = Functions.ConvertFrom24Bit(functionsMap[instructions[i].values[j]].address);
@@ -251,6 +340,9 @@ namespace CpuSim3 {
                     }
                 }
             }
+
+
+
         }
 
         public static string RemoveRfromCode(string str) {

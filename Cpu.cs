@@ -215,6 +215,23 @@ namespace CpuSim3 {
                 Execute();
             } else if (bytes != 1) {
                 FetchOtherBytes();
+                switch (op) {//xd
+                    case 17:
+                        cyclesI += (byte)Math.Log(registers[instructionData[1]] + registers[instructionData[2]],12);
+                        break;
+                    case 18:
+                        cyclesI += (byte)Math.Log(registers[instructionData[1]] + registers[instructionData[2]],7);
+                        break;
+                    case 19:
+                        cyclesI += (byte)Math.Log(registers[instructionData[1]] + registers[instructionData[2]],7);
+                        break;
+                    case 53:
+                        cyclesI += (byte)Math.Log(registers[instructionData[1]] + instructionData[2],12);
+                        break;
+                    case 54:
+                        cyclesI += (byte)Math.Log(registers[instructionData[1]] + instructionData[2],7);
+                        break;
+                }
             }
             if (op == 0) {
                 StopCpu();

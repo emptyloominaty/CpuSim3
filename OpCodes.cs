@@ -24,8 +24,8 @@ namespace CpuSim3{
 
         public OpCodes() {
             codes[0] = new OpCode("STOP", 1, 1); 
-            codes[1] = new OpCode("ADD", 4, 4); 
-            codes[2] = new OpCode("SUB", 4, 4);
+            codes[1] = new OpCode("ADD", 4, 3); 
+            codes[2] = new OpCode("SUB", 4, 3);
             codes[3] = new OpCode("LD1", 5, 4);
             codes[4] = new OpCode("ST1", 5, 4);
             codes[5] = new OpCode("LD2", 5, 4);
@@ -66,8 +66,8 @@ namespace CpuSim3{
             codes[40] = new OpCode("POP3", 2, 3);
             codes[41] = new OpCode("POP4", 2, 3);
             codes[42] = new OpCode("MOV", 3, 3);
-            codes[43] = new OpCode("ADDE", 3, 4);
-            codes[44] = new OpCode("SUBE", 3, 4);
+            codes[43] = new OpCode("ADDE", 3, 3);
+            codes[44] = new OpCode("SUBE", 3, 3);
             codes[45] = new OpCode("ADDI1", 3, 3);
             codes[46] = new OpCode("ADDI2", 4, 3);
             codes[47] = new OpCode("ADDI3", 5, 4);
@@ -96,9 +96,9 @@ namespace CpuSim3{
             codes[70] = new OpCode("SLL", 2, 3);
             codes[71] = new OpCode("SLR", 2, 3);
             codes[72] = new OpCode("SRR", 2, 3);
-            codes[73] = new OpCode("AND", 4, 4);
-            codes[74] = new OpCode("OR", 4, 4);
-            codes[75] = new OpCode("XOR", 4, 4);
+            codes[73] = new OpCode("AND", 4, 3);
+            codes[74] = new OpCode("OR", 4, 3);
+            codes[75] = new OpCode("XOR", 4, 3);
             codes[76] = new OpCode("NOT", 2, 3);
             codes[77] = new OpCode("CBT8", 2, 6);
             codes[78] = new OpCode("C8TB", 2, 6);

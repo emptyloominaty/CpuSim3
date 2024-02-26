@@ -1,0 +1,80 @@
+{
+  "version": 3,
+  "targets": {
+    "net7.0-windows10.0.19041": {}
+  },
+  "libraries": {},
+  "projectFileDependencyGroups": {
+    "net7.0-windows10.0.19041": []
+  },
+  "packageFolders": {
+    "C:\\Users\\Adam.Biskupic\\.nuget\\packages\\": {}
+  },
+  "project": {
+    "version": "1.0.0",
+    "restore": {
+      "projectUniqueName": "C:\\Users\\Adam.Biskupic\\Desktop\\1\\2\\3\\Git&IntellijIdea\\projects\\CpuSim3\\CpuSim3.csproj",
+      "projectName": "CpuSim3",
+      "projectPath": "C:\\Users\\Adam.Biskupic\\Desktop\\1\\2\\3\\Git&IntellijIdea\\projects\\CpuSim3\\CpuSim3.csproj",
+      "packagesPath": "C:\\Users\\Adam.Biskupic\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Adam.Biskupic\\Desktop\\1\\2\\3\\Git&IntellijIdea\\projects\\CpuSim3\\obj\\",
+      "projectStyle": "PackageReference",
+      "configFilePaths": [
+        "C:\\Users\\Adam.Biskupic\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+      ],
+      "originalTargetFrameworks": [
+        "net7.0-windows10.0.19041.0"
+      ],
+      "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "https://api.nuget.org/v3/index.json": {}
+      },
+      "frameworks": {
+        "net7.0-windows10.0.19041": {
+          "targetAlias": "net7.0-windows10.0.19041.0",
+          "projectReferences": {}
+        }
+      },
+      "warningProperties": {
+        "warnAsError": [
+          "NU1605"
+        ]
+      }
+    },
+    "frameworks": {
+      "net7.0-windows10.0.19041": {
+        "targetAlias": "net7.0-windows10.0.19041.0",
+        "imports": [
+          "net461",
+          "net462",
+          "net47",
+          "net471",
+          "net472",
+          "net48",
+          "net481"
+        ],
+        "assetTargetFallback": true,
+        "warn": true,
+        "downloadDependencies": [
+          {
+            "name": "Microsoft.Windows.SDK.NET.Ref",
+            "version": "[10.0.19041.29, 10.0.19041.29]"
+          }
+        ],
+        "frameworkReferences": {
+          "Microsoft.NETCore.App": {
+            "privateAssets": "all"
+          },
+          "Microsoft.Windows.SDK.NET.Ref": {
+            "privateAssets": "all"
+          },
+          "Microsoft.WindowsDesktop.App.WPF": {
+            "privateAssets": "none"
+          }
+        },
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.400\\RuntimeIdentifierGraph.json"
+      }
+    }
+  }
+}

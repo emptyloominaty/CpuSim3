@@ -64,6 +64,12 @@ namespace CpuSim3 {
 
             uint bytes = 4;
 
+
+            bool org = false;
+            uint orgAddress = 0;
+            uint orgBytes = 0;
+            byte inOrg = 0;
+
             for (int i = 0; i < lines.Length; i++) {
                 string[] line;
                 string name;
@@ -73,6 +79,19 @@ namespace CpuSim3 {
                 line = lines[i].Split(" ");
 
                 bool func = line[0].Contains("<") && line[0].Contains(">");
+
+                org = line[0].Equals(".ORG", StringComparison.OrdinalIgnoreCase);
+                bool orgEnd = line[0].Equals("-ORG", StringComparison.OrdinalIgnoreCase);
+                if (org) {
+                    orgBytes = 0;
+                    inOrg = 1;
+                    orgAddress = Convert.ToUInt32(line[1].Replace("$", "0x"), 16);
+                    continue;
+                }
+                if (orgEnd) {
+                    inOrg = 0;
+                    continue;
+                }
 
                 if (line[0] == "CONST" || line[0] == "const") {
                     string[] chars;
@@ -124,7 +143,11 @@ namespace CpuSim3 {
                         varIdx++;
                     } else if (func) { //function
                     string functionName = line[0].Replace("<", "").Replace(">", "");
-                    functions[functionIdx] = new AsFunction(functionName, i, codeStartAddress + bytes);
+                    if (inOrg == 0) {
+                        functions[functionIdx] = new AsFunction(functionName, i, codeStartAddress + bytes);
+                    } else {
+                        functions[functionIdx] = new AsFunction(functionName, i, orgAddress + orgBytes);
+                    }
                     functionsMap.Add(functionName, functions[functionIdx]);
                 } else if (!string.IsNullOrEmpty(line[0].Trim())) { //instruction
                     int idInst;
@@ -172,9 +195,14 @@ namespace CpuSim3 {
                             vals[0] = vals[0].Replace("\n", "").Replace(" ", "");
                         }
                     }
-                    instructions[instructionIdx] = new AsInstruction(line[0], bytesInst, vals, codeStartAddress + bytes, i);
 
-                    bytes += bytesInst;
+                    if (inOrg == 0) {
+                        instructions[instructionIdx] = new AsInstruction(line[0], bytesInst, vals, codeStartAddress + bytes, i);
+                        bytes += bytesInst;
+                    } else {
+                        instructions[instructionIdx] = new AsInstruction(line[0], bytesInst, vals, orgAddress + orgBytes, i);
+                        orgBytes += bytesInst;
+                    }
                     instructionIdx++;
                 }
             }
@@ -314,7 +342,6 @@ namespace CpuSim3 {
                             } else if (!(iname.Equals("JSR") || iname.Equals("JG") || iname.Equals("JNG") || iname.Equals("JL") || iname.Equals("JNL")
                                       || iname.Equals("JC") || iname.Equals("JNC") || iname.Equals("JE") || iname.Equals("JNE") || iname.Equals("JMP"))) {
                                 //VAR MEM ADDRESS
-                                Debug.WriteLine(instructions[i].values[j]);
                                 if (varsMap.ContainsKey(instructions[i].values[j])) {
                                     byte[] varAddress = Functions.ConvertFrom24Bit(varsMap[instructions[i].values[j]].address);
                                     Memory.Write((uint)(instructions[i].address + k), varAddress[0], true);

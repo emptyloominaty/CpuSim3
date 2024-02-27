@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CpuSim3.Devices;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -22,6 +23,7 @@ namespace CpuSim3 {
         public long time1 = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
         public OpCodes opCodes;
         public Cpu cpu;
+        public List<Device> devices = new List<Device>();
         public MainWindow() {
             InitializeComponent();
 
@@ -30,6 +32,11 @@ namespace CpuSim3 {
             opCodes = new OpCodes();
             cpu = new Cpu(opCodes.codes);
             cpu.StartCpu();
+
+            GlobalVars.cpu = cpu;
+
+            devices.Add(new KeyboardD (0, 0, 0xFF, 16));
+
 
 
 
@@ -63,38 +70,38 @@ namespace CpuSim3 {
             fpsText.Text = "FPS: " + fps + "";
             time1 = DateTime.Now.Ticks / ticks;
 
-            Register0.Text = "r0: " + cpu.registers[0];
-            Register1.Text = "r1: " + cpu.registers[1];
-            Register2.Text = "r2: " + cpu.registers[2];
-            Register3.Text = "r3: " + cpu.registers[3];
-            Register4.Text = "r4: " + cpu.registers[4];
-            Register5.Text = "r5: " + cpu.registers[5];
-            Register6.Text = "r6: " + cpu.registers[6];
-            Register7.Text = "r7: " + cpu.registers[7];
-            Register8.Text = "r8: " + cpu.registers[8];
-            Register9.Text = "r9: " + cpu.registers[9];
-            Register10.Text = "r10: " + cpu.registers[10];
-            Register11.Text = "r11: " + cpu.registers[11];
-            Register12.Text = "r12: " + cpu.registers[12];
-            Register13.Text = "r13: " + cpu.registers[13];
-            Register14.Text = "r14: " + cpu.registers[14];
-            Register15.Text = "r15: " + cpu.registers[15];
-            Register16.Text = "r16: " + cpu.registers[16];
-            Register17.Text = "r17: " + cpu.registers[17];
-            Register18.Text = "r18: " + cpu.registers[18];
-            Register19.Text = "r19: " + cpu.registers[19];
-            Register20.Text = "r20: " + cpu.registers[20];
-            Register21.Text = "r21: " + cpu.registers[21];
-            Register22.Text = "r22: " + cpu.registers[22];
-            Register23.Text = "r23: " + cpu.registers[23];
-            Register24.Text = "r24: " + cpu.registers[24];
-            Register25.Text = "r25: " + cpu.registers[25];
-            Register26.Text = "r26: " + cpu.registers[26];
-            Register27.Text = "r27: " + cpu.registers[27];
-            Register28.Text = "r28: " + cpu.registers[28];
-            Register29.Text = "r29: " + cpu.registers[29];
-            Register30.Text = "r30: " + cpu.registers[30];
-            Register31.Text = "r31: " + cpu.registers[31];
+            Register0.Text = "r0: " + cpu.registers[0].ToString("X8");
+            Register1.Text = "r1: " + cpu.registers[1].ToString("X8");
+            Register2.Text = "r2: " + cpu.registers[2].ToString("X8");
+            Register3.Text = "r3: " + cpu.registers[3].ToString("X8");
+            Register4.Text = "r4: " + cpu.registers[4].ToString("X8");
+            Register5.Text = "r5: " + cpu.registers[5].ToString("X8");
+            Register6.Text = "r6: " + cpu.registers[6].ToString("X8");
+            Register7.Text = "r7: " + cpu.registers[7].ToString("X8");
+            Register8.Text = "r8: " + cpu.registers[8].ToString("X8");
+            Register9.Text = "r9: " + cpu.registers[9].ToString("X8");
+            Register10.Text = "r10: " + cpu.registers[10].ToString("X8");
+            Register11.Text = "r11: " + cpu.registers[11].ToString("X8");
+            Register12.Text = "r12: " + cpu.registers[12].ToString("X8");
+            Register13.Text = "r13: " + cpu.registers[13].ToString("X8");
+            Register14.Text = "r14: " + cpu.registers[14].ToString("X8");
+            Register15.Text = "r15: " + cpu.registers[15].ToString("X8");
+            Register16.Text = "r16: " + cpu.registers[16].ToString("X8");
+            Register17.Text = "r17: " + cpu.registers[17].ToString("X8");
+            Register18.Text = "r18: " + cpu.registers[18].ToString("X8");
+            Register19.Text = "r19: " + cpu.registers[19].ToString("X8");
+            Register20.Text = "r20: " + cpu.registers[20].ToString("X8");
+            Register21.Text = "r21: " + cpu.registers[21].ToString("X8");
+            Register22.Text = "r22: " + cpu.registers[22].ToString("X8");
+            Register23.Text = "r23: " + cpu.registers[23].ToString("X8");
+            Register24.Text = "r24: " + cpu.registers[24].ToString("X8");
+            Register25.Text = "r25: " + cpu.registers[25].ToString("X8");
+            Register26.Text = "r26: " + cpu.registers[26].ToString("X8");
+            Register27.Text = "r27: " + cpu.registers[27].ToString("X8");
+            Register28.Text = "r28: " + cpu.registers[28].ToString("X8");
+            Register29.Text = "r29: " + cpu.registers[29].ToString("X8");
+            Register30.Text = "r30: " + cpu.registers[30].ToString("X8");
+            Register31.Text = "r31: " + cpu.registers[31].ToString("X8");
 
 
             OP_Text.Text = "OP: " + cpu.op;
@@ -105,8 +112,8 @@ namespace CpuSim3 {
             D_Text.Text = "" + cpu.instructionData[3];
             E_Text.Text = "" + cpu.instructionData[4];
 
-            SP_Text.Text = "SP: " + cpu.registers[34] + " ("+Math.Round(((cpu.registers[34]-8192.0)/8192)*100,1) +"%)";
-            PC_Text.Text = "PC: " + cpu.registers[33];
+            SP_Text.Text = "SP: " + cpu.registers[34].ToString("X6") + " ("+Math.Round(((cpu.registers[34]-8192.0)/8192)*100,1) +"%)";
+            PC_Text.Text = "PC: " + cpu.registers[33].ToString("X6");
 
             Running.Text = "Running: " + cpu.cpuRunning;
             Clock_Text.Text = Functions.FormatClock(cpu.clock);
@@ -234,11 +241,34 @@ namespace CpuSim3 {
         }
 
         private void Btn_LoadASM(object sender, RoutedEventArgs e) {
-            Assembler.Assemble(CodeEditor.Text, opCodes); //TODO code type
+            Assembler.Assemble(CodeEditor.Text, opCodes);
         }
 
         private void Btn_LoadMC(object sender, RoutedEventArgs e) {
-            Assembler.LoadMachineCode(CodeEditor.Text, 7340032); //TODO:startAddress
+            Assembler.LoadMachineCode(CodeEditor.Text); 
         }
+
+        private void Btn_AppOS_Click(object sender, RoutedEventArgs e) {
+            if (Assembler.os) {
+                Assembler.os = false;
+                Btn_AppOS.Content = "App";
+            } else {
+                Assembler.os = true;
+                Btn_AppOS.Content = "OS";
+            }
+        }
+
+        private void Btn_Interrupt(object sender, RoutedEventArgs e) {
+            int result = 0;
+            if (int.TryParse(TextBox_Interrupt.Text, out result)) {
+                   cpu.Interrupt(byte.Parse(TextBox_Interrupt.Text));
+            }
+        }
+        
+        private void OnKeyDownHandler(object sender, KeyEventArgs e) { 
+            GlobalVars.key = (byte)KeyInterop.VirtualKeyFromKey(e.Key);
+            textBoxKey.Text = "";
+        }
+
     }
 }

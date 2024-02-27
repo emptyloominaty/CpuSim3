@@ -276,6 +276,19 @@ namespace CpuSim3 {
                 case 1: //ADD  r1+r2=r3
                     val = registers[instructionData[1]] + registers[instructionData[2]];
                     registers[instructionData[3]] = val;
+                    if (val < registers[instructionData[1]] || val < registers[instructionData[2]]) {
+                        registers[35] = 1;
+                    } else {
+                        registers[35] = 0;
+                    }
+
+                    // Detecting overflow
+                    if (val < registers[instructionData[1]] && val < registers[instructionData[2]]) {
+                        registers[36] = 1;
+                    } else {
+                        registers[36] = 0;
+                    }
+
                     break;
                 case 2: //SUB r1-r2=r3
                     val = registers[instructionData[1]] - registers[instructionData[2]];
@@ -346,6 +359,7 @@ namespace CpuSim3 {
                     break;
                 case 15: //INC
                     registers[instructionData[1]]++;
+                    //TODO: carry
                     break;
                 case 16: //DEC
                     registers[instructionData[1]]--;
@@ -353,6 +367,11 @@ namespace CpuSim3 {
                 case 17: //MUL
                     val = registers[instructionData[1]] * registers[instructionData[2]];
                     registers[instructionData[3]] = val;
+                    if (registers[instructionData[1]] != 0 && val / registers[instructionData[1]] != registers[instructionData[2]]) {
+                        registers[36] = 1;
+                    } else {
+                        registers[36] = 0;
+                    }
                     break;
                 case 18: //DIV
                     if (registers[instructionData[2]] != 0) {
@@ -376,6 +395,7 @@ namespace CpuSim3 {
                         val++;
                     }
                     registers[instructionData[3]] = val;
+                    //TODO: carry
                     break;
                 case 21: //SUC
                     val = registers[instructionData[1]] - registers[instructionData[2]];
@@ -541,6 +561,7 @@ namespace CpuSim3 {
                 case 48: //ADDI4
                     val = registers[instructionData[1]] + Functions.ConvertTo32Bit(instructionData[2], instructionData[3], instructionData[4], instructionData[5]);
                     registers[instructionData[1]] = val;
+                    //TODO: carry
                     break;
                 case 49: //SUBI1
                     val = registers[instructionData[1]] - instructionData[2];
@@ -561,6 +582,11 @@ namespace CpuSim3 {
                 case 53: //MULI1
                     val = registers[instructionData[1]] * instructionData[2];
                     registers[instructionData[1]] = val;
+                    if (registers[instructionData[1]] != 0 && val / registers[instructionData[1]] != instructionData[2]) {
+                        registers[36] = 1;
+                    } else {
+                        registers[36] = 0;
+                    }
                     break;
                 case 54: //DIVI1
                     if (registers[instructionData[2]] != 0) {

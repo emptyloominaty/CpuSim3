@@ -1,0 +1,27 @@
+const 4 a 10000
+const 4 b 255
+
+LDI3 r0 0x050200
+LDI3 r1 0x000180
+STR3 r0 r1
+LD4 r0 a
+JSR loop
+STOP
+
+<loop>
+INC r1
+JG r0 r1 loop
+
+.ORG 0x050200
+MUL r0 r1 r2
+MUL r0 r2 r3
+MUL r1 r3 r4
+MUL r3 r0 r5
+INC r1
+RFI
+
+
+
+
+
+

@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 
 namespace CpuSim3 {
     public static class Assembler {
+        public static bool os = true;
+
         public static int CheckHex(string valIn) {
             string val = valIn;
             int val2 = 0;
@@ -28,7 +30,7 @@ namespace CpuSim3 {
             return val2;
         }
 
-        public static void Assemble(string code, OpCodes opcodes, string codeType = "OS") {
+        public static void Assemble(string code, OpCodes opcodes) {
             Memory.Init();
             string[] lines;
 
@@ -49,10 +51,10 @@ namespace CpuSim3 {
 
             uint codeStartAddress = 7340032;
             uint varStartAddress = 0x000300;
-            if (codeType == "OS") {
+            if (os) {
                 codeStartAddress = 7340032;
                 varStartAddress = 0x000300;
-            } else if (codeType == "App") {
+            } else {
                 codeStartAddress = 4194304;
                 varStartAddress = 0x004000;
             }
@@ -69,7 +71,6 @@ namespace CpuSim3 {
             uint orgAddress = 0;
             uint orgBytes = 0;
             byte inOrg = 0;
-
             for (int i = 0; i < lines.Length; i++) {
                 string[] line;
                 string name;
@@ -240,11 +241,11 @@ namespace CpuSim3 {
             }
 
             uint ldibytes = bytes + constsBytes;
-            Memory.Write(codeStartAddress, 24);
+            Memory.Write(codeStartAddress, 24, true);
             byte[] varInitFunctionAddress = Functions.ConvertFrom24Bit(codeStartAddress + ldibytes);
-            Memory.Write(codeStartAddress + 1, varInitFunctionAddress[0]);
-            Memory.Write(codeStartAddress + 2, varInitFunctionAddress[1]);
-            Memory.Write(codeStartAddress + 3, varInitFunctionAddress[2]);
+            Memory.Write(codeStartAddress + 1, varInitFunctionAddress[0], true);
+            Memory.Write(codeStartAddress + 2, varInitFunctionAddress[1], true);
+            Memory.Write(codeStartAddress + 3, varInitFunctionAddress[2], true);
 
             uint varsBytes = 0;
             uint varsAddress = varStartAddress;
@@ -259,14 +260,14 @@ namespace CpuSim3 {
                 byte[] store;
                 if (vars[i].bytes == 1) { //LDI1
                     Memory.Write(codeStartAddress + ldibytes, 11); //LDI1
-                    Memory.Write(codeStartAddress + ldibytes + 1, 0);
-                    Memory.Write(codeStartAddress + ldibytes + 2, (byte)vars[i].value);
-                    Memory.Write(codeStartAddress + ldibytes + 3, 4); //ST1
-                    Memory.Write(codeStartAddress + ldibytes + 4, 0);
+                    Memory.Write(codeStartAddress + ldibytes + 1, 0, true);
+                    Memory.Write(codeStartAddress + ldibytes + 2, (byte)vars[i].value, true);
+                    Memory.Write(codeStartAddress + ldibytes + 3, 4, true); //ST1
+                    Memory.Write(codeStartAddress + ldibytes + 4, 0, true);
                     byte[] varaddress = Functions.ConvertFrom24Bit(vars[i].address);
-                    Memory.Write(codeStartAddress + ldibytes + 5, varaddress[0]);
-                    Memory.Write(codeStartAddress + ldibytes + 6, varaddress[1]);
-                    Memory.Write(codeStartAddress + ldibytes + 7, varaddress[2]);
+                    Memory.Write(codeStartAddress + ldibytes + 5, varaddress[0], true);
+                    Memory.Write(codeStartAddress + ldibytes + 6, varaddress[1], true);
+                    Memory.Write(codeStartAddress + ldibytes + 7, varaddress[2], true);
                     ldibytes += 8;
                 } else if (vars[i].bytes == 2) {  //LDI2
                     store = Functions.ConvertFrom16Bit((uint)vars[i].value);
@@ -286,7 +287,7 @@ namespace CpuSim3 {
                 }
             }
 
-            Memory.Write(codeStartAddress + ldibytes, 25);
+            Memory.Write(codeStartAddress + ldibytes, 25, true);
 
 
             //write instruction to memory
@@ -384,7 +385,14 @@ namespace CpuSim3 {
             return System.Text.RegularExpressions.Regex.IsMatch(str, @"\b([R-R-r-r][0-9]{1,2})");
         }
 
-        public static void LoadMachineCode(string code, uint codeStartAddress) {
+        public static void LoadMachineCode(string code) {
+            uint codeStartAddress = 7340032;
+            if (os) {
+                codeStartAddress = 7340032;
+            } else {
+                codeStartAddress = 4194304;
+            }
+
             Memory.Init();
             string[] bytes;
             byte[] bytes2 = new byte[4194304];

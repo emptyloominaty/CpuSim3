@@ -29,7 +29,6 @@
 
 Reset Vector: 0x700000
 
-TODO:
 ### Instructions
 | OP - Name  | Cycles | Bytes |     | Byte1 | Byte2 |  Byte3  |  Byte4  |  Byte5  | Byte6 |
 |------------|:------:|:-----:|:---:|:-----:|:-----:|:-------:|:-------:|:-------:|:-----:|   

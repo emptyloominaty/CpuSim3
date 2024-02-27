@@ -20,8 +20,12 @@ namespace CpuSim3 {
                 DataCanWriteArray[i] = true; //TODO
             }
 
+            for (int i = 0x400000; i <= 0xffffff; i++) {
+                DataCanWriteArray[i] = false;
+            }
+
             //TEST CODE
-            Write(7340032, 3, true);
+            /*Write(7340032, 3, true);
             Write(7340033, 0, true);
             Write(7340034, 0x70, true);
             Write(7340035, 0, true);
@@ -83,7 +87,7 @@ namespace CpuSim3 {
             Write(7340079, 23, true);
             Write(7340080, 0x70, true);
             Write(7340081, 0x00, true);
-            Write(7340082, 0x21, true);
+            Write(7340082, 0x21, true);*/
         }
 
         public static byte Read(uint address) {
@@ -94,7 +98,7 @@ namespace CpuSim3 {
         }
         public static void Write(uint address, byte data, bool forceWrite = false) {
             if (address < Data.Length) {
-                if (DataCanWriteArray[address]) {
+                if (DataCanWriteArray[address] || forceWrite) {
                     Data[address] = data;
                 }
             }

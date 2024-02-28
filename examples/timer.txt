@@ -1,0 +1,41 @@
+const 4 a 1000
+const 4 b 255
+const 3 timerEnable 0x880100
+const 3 timerSet 0x880101
+var 4 time 0
+
+LDI3 r0 0x050200
+LDI3 r1 0x000198
+STR3 r0 r1
+LD4 r0 a
+JSR setTimer
+JSR loop
+STOP
+
+<setTimer>
+LD3 r31 timerSet
+LDI2 r30 1000
+STR2 r30 r31
+LD3 r31 timerEnable
+LDI1 r30 1
+STR1 r30 r31
+RFS
+
+
+<loop>
+HLT
+JMP loop
+
+.ORG 0x050200
+PUSH4 r12
+LD4 r12 time
+INC r12
+ST4 r12 time
+POP4 r12
+RFI
+
+
+
+
+
+

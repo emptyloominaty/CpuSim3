@@ -31,7 +31,11 @@ namespace CpuSim3 {
         }
 
         public static void Assemble(string code, OpCodes opcodes) {
-            Memory.Init();
+            for (int i = 0; i < 0x800000; i++) {
+                GlobalVars.cpu.cpuRunning = false;
+                Memory.Data[i] = 0;
+            }
+
             string[] lines;
 
             //remove comments ;;
@@ -65,7 +69,8 @@ namespace CpuSim3 {
             int functionIdx = 0;
 
             uint bytes = 4;
-
+            uint constsBytes = 0;
+            uint varsBytes = 0;
 
             bool org = false;
             uint orgAddress = 0;
@@ -209,7 +214,7 @@ namespace CpuSim3 {
             }
 
 
-            uint constsBytes = 0;
+            
             uint constsAddress = codeStartAddress + bytes;
             for (int i = 0; i < constIdx; i++) {
                 //calc consts addresses
@@ -247,7 +252,6 @@ namespace CpuSim3 {
             Memory.Write(codeStartAddress + 2, varInitFunctionAddress[1], true);
             Memory.Write(codeStartAddress + 3, varInitFunctionAddress[2], true);
 
-            uint varsBytes = 0;
             uint varsAddress = varStartAddress;
             for (int i = 0; i < varIdx; i++) {
                 //calc vars addresses
@@ -369,7 +373,12 @@ namespace CpuSim3 {
                 }
             }
 
+            Debug.WriteLine("----------");
+            Debug.WriteLine("Size: "+bytes); 
+            Debug.WriteLine("Const: " + constsBytes);
+            Debug.WriteLine("Var: " + varsBytes);
 
+            Debug.WriteLine("----------");
 
         }
 

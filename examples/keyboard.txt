@@ -1,5 +1,6 @@
-const 4 a 10000
+const 4 a 1000
 const 4 b 255
+const 3 keyboardAddress 0x800018
 
 LDI3 r0 0x050200
 LDI3 r1 0x000180
@@ -9,15 +10,15 @@ JSR loop
 STOP
 
 <loop>
-INC r1
-JG r0 r1 loop
+HLT
+JMP loop
 
 .ORG 0x050200
-MUL r0 r1 r2
-MUL r0 r2 r3
-MUL r1 r3 r4
-MUL r3 r0 r5
-INC r1
+SDI
+LD3 r10 keyboardAddress
+LDR3 r11 r10
+INC r12
+SEI
 RFI
 
 

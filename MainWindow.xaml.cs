@@ -1,6 +1,7 @@
 ﻿using CpuSim3.Devices;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -24,6 +25,10 @@ namespace CpuSim3 {
         public OpCodes opCodes;
         public Cpu cpu;
         public List<Device> devices = new List<Device>();
+        public bool autoRefreshMemory = false;
+        public string memoryText = "0x000000";
+        public byte memoryWait = 0;
+        public List<float> cpuUsage = new List<float>();
         public MainWindow() {
             InitializeComponent();
 
@@ -35,8 +40,8 @@ namespace CpuSim3 {
 
             GlobalVars.cpu = cpu;
 
-            devices.Add(new KeyboardD (0, 0, 0xFF, 16));
-
+            devices.Add(new Devices.Keyboard (0, 0, 0xF, 64));
+            devices.Add(new Devices.Timer(7, 1, 0xF, 64));
 
 
 
@@ -131,7 +136,25 @@ namespace CpuSim3 {
             }
             Usage_Text.Text = "CPU Usage: " + cpuUsage + "%";
 
+            if (cpu.cpuRunning) {
+                UpdateCpuUsageGraph();
+            }
+            
+
+
             DEBUG_Text.Text = "";
+
+            
+            if (autoRefreshMemory) {
+                if (memoryWait<4) {
+                    memoryWait++;
+                } else {
+                    memoryWait = 0;
+                    MemoryLoad();
+                }
+            }
+
+
 
             //Random random = new Random();
             //Color[] colors = new Color[] { Colors.Red, Colors.White, Colors.Black };
@@ -179,64 +202,69 @@ namespace CpuSim3 {
             }
         }
 
+        private void MemoryLoad() {
+            uint address = 0;
+            uint.TryParse(memoryText.Substring(2), System.Globalization.NumberStyles.HexNumber, null, out address);
+
+            string add0 = address.ToString("X6");
+            string add1 = (address + 16).ToString("X6");
+            string add2 = (address + 32).ToString("X6");
+            string add3 = (address + 48).ToString("X6");
+            string add4 = (address + 64).ToString("X6");
+            string add5 = (address + 80).ToString("X6");
+            string add6 = (address + 96).ToString("X6");
+            string add7 = (address + 112).ToString("X6");
+
+            string line0 = "";
+            for (int i = 0; i < 16; i++) {
+                line0 += " " + Memory.Read((uint)(address + i)).ToString("X2");
+            }
+            string line1 = "";
+            for (int i = 16; i < 32; i++) {
+                line1 += " " + Memory.Read((uint)(address + i)).ToString("X2");
+            }
+            string line2 = "";
+            for (int i = 32; i < 48; i++) {
+                line2 += " " + Memory.Read((uint)(address + i)).ToString("X2");
+            }
+            string line3 = "";
+            for (int i = 48; i < 64; i++) {
+                line3 += " " + Memory.Read((uint)(address + i)).ToString("X2");
+            }
+            string line4 = "";
+            for (int i = 64; i < 80; i++) {
+                line4 += " " + Memory.Read((uint)(address + i)).ToString("X2");
+            }
+            string line5 = "";
+            for (int i = 80; i < 96; i++) {
+                line5 += " " + Memory.Read((uint)(address + i)).ToString("X2");
+            }
+            string line6 = "";
+            for (int i = 96; i < 112; i++) {
+                line6 += " " + Memory.Read((uint)(address + i)).ToString("X2");
+            }
+            string line7 = "";
+            for (int i = 112; i < 128; i++) {
+                line7 += " " + Memory.Read((uint)(address + i)).ToString("X2");
+            }
+
+            MemoryLine0.Text = "0x" + add0 + ": " + line0;
+            MemoryLine1.Text = "0x" + add1 + ": " + line1;
+            MemoryLine2.Text = "0x" + add2 + ": " + line2;
+            MemoryLine3.Text = "0x" + add3 + ": " + line3;
+            MemoryLine4.Text = "0x" + add4 + ": " + line4;
+            MemoryLine5.Text = "0x" + add5 + ": " + line5;
+            MemoryLine6.Text = "0x" + add6 + ": " + line6;
+            MemoryLine7.Text = "0x" + add7 + ": " + line7;
+        }
+
         private void TextBox_MemoryViewer(object sender, TextChangedEventArgs e) {
             if (sender is TextBox textBox) {
                 if (!textBox.Text.StartsWith("0x") || textBox.Text.Length <= 2) {
                     return;
                 }
-                uint address = 0;
-                uint.TryParse(textBox.Text.Substring(2), System.Globalization.NumberStyles.HexNumber, null, out address);
-
-                string add0 = address.ToString("X6");
-                string add1 = (address + 16).ToString("X6");
-                string add2 = (address + 32).ToString("X6");
-                string add3 = (address + 48).ToString("X6");
-                string add4 = (address + 64).ToString("X6");
-                string add5 = (address + 80).ToString("X6");
-                string add6 = (address + 96).ToString("X6");
-                string add7 = (address + 112).ToString("X6");
-
-                string line0 = "";
-                for (int i = 0; i < 16; i++) {
-                    line0 += " " + Memory.Read((uint)(address + i)).ToString("X2");
-                }
-                string line1 = "";
-                for (int i = 16; i < 32; i++) {
-                    line1 += " " + Memory.Read((uint)(address + i)).ToString("X2");
-                }
-                string line2 = "";
-                for (int i = 32; i < 48; i++) {
-                    line2 += " " + Memory.Read((uint)(address + i)).ToString("X2");
-                }
-                string line3 = "";
-                for (int i = 48; i < 64; i++) {
-                    line3 += " " + Memory.Read((uint)(address + i)).ToString("X2");
-                }
-                string line4 = "";
-                for (int i = 64; i < 80; i++) {
-                    line4 += " " + Memory.Read((uint)(address + i)).ToString("X2");
-                }
-                string line5 = "";
-                for (int i = 80; i < 96; i++) {
-                    line5 += " " + Memory.Read((uint)(address + i)).ToString("X2");
-                }
-                string line6 = "";
-                for (int i = 96; i < 112; i++) {
-                    line6 += " " + Memory.Read((uint)(address + i)).ToString("X2");
-                }
-                string line7 = "";
-                for (int i = 112; i < 128; i++) {
-                    line7 += " " + Memory.Read((uint)(address + i)).ToString("X2");
-                }
-
-                MemoryLine0.Text = "0x" + add0 + ": " + line0;
-                MemoryLine1.Text = "0x" + add1 + ": " + line1;
-                MemoryLine2.Text = "0x" + add2 + ": " + line2;
-                MemoryLine3.Text = "0x" + add3 + ": " + line3;
-                MemoryLine4.Text = "0x" + add4 + ": " + line4;
-                MemoryLine5.Text = "0x" + add5 + ": " + line5;
-                MemoryLine6.Text = "0x" + add6 + ": " + line6;
-                MemoryLine7.Text = "0x" + add7 + ": " + line7;
+                memoryText = textBox.Text;
+                MemoryLoad();
             }
         }
 
@@ -264,7 +292,66 @@ namespace CpuSim3 {
                    cpu.Interrupt(byte.Parse(TextBox_Interrupt.Text));
             }
         }
+
+        private void Btn_AutoRefresh(object sender, RoutedEventArgs e) {
+            if (autoRefreshMemory) {
+                BtnAutoRefresh.Content = "Auto Refresh: Off";
+                autoRefreshMemory = false;
+            } else {
+                BtnAutoRefresh.Content = "Auto Refresh: On";
+                autoRefreshMemory = true;
+            }
+         
+
+        }
+
+        public long cpuCyclesExB = 0;
+        public long cpuCyclesToB = 0;
+        public long cpuUpdateTimerA = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
+        public long cpuUpdateTimerB = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
+        public void UpdateCpuUsageGraph() {
+            cpuUpdateTimerA = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
+
+            if (cpuUpdateTimerA-cpuUpdateTimerB>100) { //TODO: slider?
+
+                if (cpuCyclesToB > cpu.cyclesTotal) {
+                    cpuCyclesToB = cpuCyclesToB / 2;
+                    cpuCyclesExB = cpuCyclesExB / 2;
+                }
+
+                double cyclesTotalSec = cpu.cyclesTotal - cpuCyclesToB;  
+                double cyclesExecSec = cpu.cyclesExecuting - cpuCyclesExB;
+
+                cpuUsage.Add((float)Math.Round(cyclesExecSec / cyclesTotalSec * 100, 1));
+                if (cpuUsage.Count>100) {
+                    cpuUsage.RemoveAt(0);
+                }
+
+
+                cpuUsageChartLine.Points.Clear();
+                for (int i = 0;  i < cpuUsage.Count; i++) {
+                    int x = i * 6;
+                    int y = (int)(200 - (cpuUsage[i] * 2));
+
+                    if (y<0) {
+                        y = 0;
+                    } else if (y>200) {
+                        y = 200;
+                    }
+                    Point point = new Point(x, y);
+                    cpuUsageChartLine.Points.Add(point);
+                }
+
+                cpuUsageCanvas.InvalidateVisual();
+
+                cpuCyclesExB = cpu.cyclesExecuting;
+                cpuCyclesToB = cpu.cyclesTotal;
+                cpuUpdateTimerB = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
+            }
+        }
         
+
+
         private void OnKeyDownHandler(object sender, KeyEventArgs e) { 
             GlobalVars.key = (byte)KeyInterop.VirtualKeyFromKey(e.Key);
             textBoxKey.Text = "";

@@ -24,7 +24,7 @@
         <TextBlock Name="Instructions_Done_Text" HorizontalAlignment="Left" Margin="20,85,0,-49" TextWrapping="Wrap" Text="Instructions Done:" Grid.RowSpan="2"/>
         <TextBlock Name="Cycles_Done_Text" HorizontalAlignment="Left" Margin="20,110,0,-49" TextWrapping="Wrap" Text="Cycles Done: " Grid.RowSpan="2"/>
 
-        <TextBlock Name="Usage_Text" HorizontalAlignment="Left" Margin="20,195,0,-49" TextWrapping="Wrap" Text="Cpu Usage: 0%" Grid.RowSpan="2"/>
+        <TextBlock Name="Usage_Text" HorizontalAlignment="Left" Margin="1415,230,0,-94" TextWrapping="Wrap" Text="Cpu Usage: 0%" Grid.RowSpan="2"/>
 
         <TextBlock Name="OP_Text" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="310,20,0,0"  Text="OP: " Height="30"/>
         <TextBlock Name="OPString_Text" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="450,20,0,0" Text="TEST" Height="30"/>
@@ -76,9 +76,6 @@
             </StackPanel>
         </StackPanel>
 
-
-
-        <!--<Canvas Height="300" Width="400" Name="myCanvas" Margin="1190,179,10,5" Grid.Row="1" />-->
         <TextBox HorizontalAlignment="Left" Margin="20,169,0,0" TextWrapping="Wrap" Text="1000000" VerticalAlignment="Top" Width="120" TextChanged="TextBox_TextChanged"/>
         <Button Name="BtnCpuToggle" Content="Start" HorizontalAlignment="Left" Margin="150,168,0,0" Click="ToggleCpu" VerticalAlignment="Top"/>
         <TextBlock HorizontalAlignment="Left" Margin="20,140,0,0" TextWrapping="Wrap" Text="Clock:" VerticalAlignment="Top"/>
@@ -108,6 +105,7 @@
     0x000070: 00 FF F0 F0 FF FF FF FF 00 00 00 00 FF FF FF FF
         </TextBlock>
         <TextBox HorizontalAlignment="Left" Margin="20,237,0,0" TextWrapping="Wrap" Text="0x000000" VerticalAlignment="Top" Width="90" TextChanged="TextBox_MemoryViewer" Grid.Row="1"/>
+        <Button Name="BtnAutoRefresh" Content="Auto Refresh: Off" HorizontalAlignment="Left" Margin="150,0,0,224" Click="Btn_AutoRefresh" VerticalAlignment="Bottom" Grid.Row="1"/>
 
 
         <TextBox Name="CodeEditor"  Margin="0,250,0,0" TextWrapping="Wrap" Text="" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" AcceptsReturn="True" HorizontalAlignment="Center" VerticalAlignment="Center" Width="350" Height="502" Grid.RowSpan="2"/>
@@ -120,6 +118,22 @@
 
         <TextBox Width="80" Height="80" Name="textBoxKey"
            KeyDown="OnKeyDownHandler"/>
+
+        <Canvas Height="200" Width="600" Name="cpuUsageCanvas" Margin="990,20,10,180" >
+            <!-- X-Axis -->
+            <Line X1="0" Y1="200" X2="600" Y2="200" Stroke="Black" StrokeThickness="2"/>
+
+            <!-- Y-Axis -->
+            <Line X1="0" Y1="0" X2="0" Y2="200" Stroke="Black" StrokeThickness="2"/>
+
+            <!-- Data Points -->
+            <Polyline x:Name="cpuUsageChartLine" Stroke="Aqua" StrokeThickness="2">
+                <Polyline.Points>
+                    <Point X="0" Y="0"/>
+                </Polyline.Points>
+            </Polyline>
+
+        </Canvas>
 
     </Grid>
 </Window>

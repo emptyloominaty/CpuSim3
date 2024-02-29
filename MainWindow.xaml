@@ -135,5 +135,12 @@
 
         </Canvas>
 
+
+        <Slider HorizontalAlignment="Left" Minimum="50" Maximum="2000" TickFrequency="10" Value="100"  Margin="1127,230,0,0" VerticalAlignment="Top" Width="120" ValueChanged="Slider_ValueChanged"/>
+        <TextBlock Name="cpuUsageSlider" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="1258,228,0,0" TextWrapping="Wrap" Text="100ms "/>
+        <TextBlock x:Name="Usage_Text_Avg" HorizontalAlignment="Left" Margin="1375,250,0,-114" TextWrapping="Wrap" Text="Avg Cpu Usage: 0%" Grid.RowSpan="2"/>
+
+        <Button Name="Btn_MemoryViewer" Content="Memory Viewer" HorizontalAlignment="Left" Margin="758,26,0,0" VerticalAlignment="Top" Click="Btn_MemoryViewer_Click"/>
+
     </Grid>
 </Window>

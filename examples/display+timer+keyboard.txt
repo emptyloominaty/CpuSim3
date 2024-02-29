@@ -1,0 +1,78 @@
+const 4 a 1000
+const 4 b 255
+const 3 timerEnable 0x880100
+const 3 timerSet 0x880101
+const 3 timerEnable2 0x880105
+const 3 timerSet2 0x880106
+const 3 keyboardAddress 0x800018
+const 3 frameBufferAddress 0x901000
+var 4 time 0
+var 4 time2 0
+var 4 key 0
+
+LDI3 r0 0x050200
+LDI3 r1 0x000198
+STR3 r0 r1
+LDI3 r0 0x0502A0
+LDI3 r1 0x00019B
+STR3 r0 r1
+LDI3 r0 0x0502F0
+LDI3 r1 0x000180
+STR3 r0 r1
+LD3 r20 frameBufferAddress
+LD4 r0 a
+JSR setTimer
+JSR loop
+STOP
+
+<setTimer>
+LD3 r31 timerSet
+LDI2 r30 50
+STR2 r30 r31
+LD3 r31 timerEnable
+LDI1 r30 1
+STR1 r30 r31
+LD3 r31 timerSet2
+LDI2 r30 1000
+STR2 r30 r31
+LD3 r31 timerEnable2
+LDI1 r30 1
+STR1 r30 r31
+RFS
+
+
+<loop>
+HLT
+JMP loop
+
+.ORG 0x050200
+PUSH4 r12
+LD4 r12 time
+INC r12
+ST4 r12 time
+POP4 r12
+RFI
+
+.ORG 0x0502A0
+PUSH4 r13
+LD4 r13 time2
+INC r13
+ST4 r13 time2
+POP4 r13
+RFI
+
+.ORG 0x0502F0
+LD3 r10 keyboardAddress
+LDR1 r11 r10
+INC r11
+ST4 r11 key
+INC r20
+STR1 r11 r20
+RFI
+
+
+
+
+
+
+

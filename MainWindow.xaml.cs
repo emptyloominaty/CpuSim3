@@ -20,17 +20,31 @@ namespace CpuSim3 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
+
     public partial class MainWindow : Window {
         public long time1 = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
         public OpCodes opCodes;
         public Cpu cpu;
+        public List<Display> displays = new List<Display>();
         public List<Device> devices = new List<Device>();
         public bool autoRefreshMemory = false;
         public string memoryText = "0x000000";
         public byte memoryWait = 0;
+
+        public int displayWait = 0;
+
         public List<float> cpuUsage = new List<float>();
+
+        public MemoryViewer memoryViewerWindow = new MemoryViewer();
+
+
         public MainWindow() {
             InitializeComponent();
+            GlobalVars.devices = devices;
+            GlobalVars.displays = displays;
+
+            memoryViewerWindow.Show();
+
 
             CompositionTarget.Rendering += Loop;
 
@@ -42,8 +56,7 @@ namespace CpuSim3 {
 
             devices.Add(new Devices.Keyboard (0, 0, 0xF, 64));
             devices.Add(new Devices.Timer(7, 1, 0xF, 64));
-
-
+            devices.Add(new Devices.VramDisplay(4, 2, 0xF, 64, 524288, 300, 300));
 
             //TEST
             /*Random random = new Random();
@@ -70,6 +83,22 @@ namespace CpuSim3 {
             long fps = 0;
             if (ms > 0) {
                 fps = 1000 / ms;
+            }
+
+            if (displayWait < 30) {
+                displayWait++;
+            } else {
+                displayWait = 0;
+                for (int i = 0; i < displays.Count; i++) {
+                    if (displays[i].IsLoaded && displays[i].IsVisible) {
+                        displays[i].UpdateWindow();
+                    }
+                }
+            }
+        
+
+            if (memoryViewerWindow.IsLoaded) {
+                memoryViewerWindow.UpdateWindow();
             }
 
             fpsText.Text = "FPS: " + fps + "";
@@ -134,7 +163,7 @@ namespace CpuSim3 {
             if (cpuUsage > 100) {
                 cpuUsage = 100;
             }
-            Usage_Text.Text = "CPU Usage: " + cpuUsage + "%";
+            Usage_Text_Avg.Text = "Avg CPU Usage: " + cpuUsage + "%";
 
             if (cpu.cpuRunning) {
                 UpdateCpuUsageGraph();
@@ -146,6 +175,8 @@ namespace CpuSim3 {
 
             
             if (autoRefreshMemory) {
+                //TODO: memory viewer window
+
                 if (memoryWait<4) {
                     memoryWait++;
                 } else {
@@ -301,18 +332,19 @@ namespace CpuSim3 {
                 BtnAutoRefresh.Content = "Auto Refresh: On";
                 autoRefreshMemory = true;
             }
-         
-
         }
 
         public long cpuCyclesExB = 0;
         public long cpuCyclesToB = 0;
         public long cpuUpdateTimerA = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
         public long cpuUpdateTimerB = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
+
+        public uint cpuUsageTime = 100;
+
         public void UpdateCpuUsageGraph() {
             cpuUpdateTimerA = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
 
-            if (cpuUpdateTimerA-cpuUpdateTimerB>100) { //TODO: slider?
+            if (cpuUpdateTimerA-cpuUpdateTimerB > cpuUsageTime) {
 
                 if (cpuCyclesToB > cpu.cyclesTotal) {
                     cpuCyclesToB = cpuCyclesToB / 2;
@@ -342,20 +374,37 @@ namespace CpuSim3 {
                     cpuUsageChartLine.Points.Add(point);
                 }
 
-                cpuUsageCanvas.InvalidateVisual();
+                //cpuUsageCanvas.InvalidateVisual();
 
                 cpuCyclesExB = cpu.cyclesExecuting;
                 cpuCyclesToB = cpu.cyclesTotal;
                 cpuUpdateTimerB = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
+                Usage_Text.Text = "CPU Usage: " + cpuUsage[cpuUsage.Count-1] + "%";
             }
         }
-        
-
 
         private void OnKeyDownHandler(object sender, KeyEventArgs e) { 
             GlobalVars.key = (byte)KeyInterop.VirtualKeyFromKey(e.Key);
             textBoxKey.Text = "";
         }
 
+        private void Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
+            if (this.IsLoaded) {
+                cpuUsageSlider.Text = $"{(uint)((Slider)sender).Value}ms";
+                cpuUsageTime = (uint)((Slider)sender).Value;
+            }
+        }
+
+        private void Btn_MemoryViewer_Click(object sender, RoutedEventArgs e) {
+            if (memoryViewerWindow.IsVisible) {
+                memoryViewerWindow.Hide();
+            } else if (memoryViewerWindow.IsLoaded) {
+                memoryViewerWindow.Show();
+            } else {
+                memoryViewerWindow = new MemoryViewer();
+                memoryViewerWindow.Show();
+            }
+        }
     }
+
 }

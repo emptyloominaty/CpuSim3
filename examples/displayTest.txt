@@ -1,0 +1,38 @@
+const 4 a 256
+const 4 b 299
+const 3 timerEnable 0x880100
+const 3 timerSet 0x880101
+const 3 timerEnable2 0x880105
+const 3 timerSet2 0x880106
+const 3 keyboardAddress 0x800018
+const 3 frameBufferAddress 0x901000
+var 4 time 0
+var 4 time2 0
+var 4 key 0
+
+LD3 r20 frameBufferAddress
+LD4 r0 a
+LDI1 r1 0
+LD4 r2 b
+LDI1 r3 0
+JSR loop
+STOP
+
+
+<loop>
+INC r3
+STR1 r1 r20
+INC r20
+JG r3 r2 incColor
+JG r0 r1 loop
+RFS
+
+<incColor>
+INC r1
+LDI1 r3 0
+JMP loop
+
+
+
+
+

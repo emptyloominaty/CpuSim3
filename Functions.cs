@@ -58,5 +58,28 @@ namespace CpuSim3 {
             return Convert.ToInt32(str, 16);
         }
 
+        public static string GetDeviceType(byte type) {
+            switch(type) {
+                case 0:
+                    return "Keyboard";
+                case 1:
+                    return "GPU";
+                case 2:
+                    return "Storage";
+                case 3:
+                    return "Network";
+                case 4:
+                    return "VRAM+Display";
+                case 5:
+                    return "FPU";
+                case 6:
+                    return "User Storage Port";
+                case 7:
+                    return "Timer";
+                default:
+                    return "";
+            }
+        }
+
     }
 }

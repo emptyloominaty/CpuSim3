@@ -35,11 +35,15 @@ namespace CpuSim3 {
 
         public List<float> cpuUsage = new List<float>();
 
+        public TextBox textBoxKey;
+
         public MemoryViewer memoryViewerWindow = new MemoryViewer();
 
+        public List<StackPanel> deviceList = new List<StackPanel>();
 
         public MainWindow() {
             InitializeComponent();
+            Application.Current.MainWindow = this;
             GlobalVars.devices = devices;
             GlobalVars.displays = displays;
 
@@ -56,22 +60,61 @@ namespace CpuSim3 {
 
             devices.Add(new Devices.Keyboard (0, 0, 0xF, 64));
             devices.Add(new Devices.Timer(7, 1, 0xF, 64));
-            devices.Add(new Devices.VramDisplay(4, 2, 0xF, 64, 524288, 300, 300));
+            devices.Add(new Devices.VramDisplay(4, 2, 0xF, 64, 524288, 512, 400));
 
-            //TEST
-            /*Random random = new Random();
-            Color[] colors = new Color[] { Colors.Red, Colors.White, Colors.Black };
+            bool keyBoardDev = false;
+            bool displayDev = false;
+            for (int i = 0; i<devices.Count; i++) {
+                StackPanel stackPanel = new StackPanel();
+                stackPanel.Orientation = Orientation.Horizontal;
+                deviceList.Add(stackPanel);
 
-            int pxSize = 2;
+                TextBlock textBox = new TextBlock();
+                textBox.Text = "Device_"+i;
+                textBox.Margin = new Thickness(0, 0, 10, 0);
 
-            for (int x = 0; x < 200; x++) {
-                for (int y = 0; y < 200; y++) {
+                TextBlock textBox_Type = new TextBlock();
+                textBox_Type.Text = Functions.GetDeviceType(devices[i].type);
+                textBox_Type.Margin  = new Thickness(0, 0, 10, 0);
 
-                    int randomNumber = random.Next(0, 3);
+                TextBlock textBox_Address = new TextBlock();
+                textBox_Address.Text = "0x"+(8388608 + (524288 * i)).ToString("X6");
+                textBox_Address.Margin = new Thickness(0, 0, 10, 0);
 
-                    DrawFilledRectangle(0 + (x * pxSize), 0 + (y * pxSize), pxSize, pxSize, colors[randomNumber]);
+                stackPanel.Children.Add(textBox);
+                stackPanel.Children.Add(textBox_Address);
+                stackPanel.Children.Add(textBox_Type);
+               
+                if (devices[i].type == 0 && !keyBoardDev) {
+                    keyBoardDev = true;
+                    textBoxKey = new TextBox();
+                    textBoxKey.Width = 80;
+                    textBoxKey.Height = 30;
+                    textBoxKey.Name = "textBoxKey";
+                    textBoxKey.KeyDown += OnKeyDownHandler;
+                    stackPanel.Children.Add(textBoxKey);
+                } else if ((devices[i].type == 1 || devices[i].type == 4) && !displayDev) {
+                    displayDev = true;
+                    Button Btn_Display = new Button();
+                    Btn_Display.Name = "Btn_Display";
+                    Btn_Display.Content = "Display";
+                    Btn_Display.Click += Btn_Display_Click;
+                    stackPanel.Children.Add(Btn_Display);
                 }
-            }*/
+
+
+                DeviceList.Children.Add(stackPanel);
+
+            }
+         
+
+
+            // Add the StackPanel to a parent container (e.g., a Grid)
+            // For example:
+            // parentGrid.Children.Add(stackPanel);
+            // Set the content of the window to the StackPanel
+            //this.Content = stackPanel;
+
         }
 
         public void Loop(object sender, EventArgs e) {
@@ -403,6 +446,16 @@ namespace CpuSim3 {
             } else {
                 memoryViewerWindow = new MemoryViewer();
                 memoryViewerWindow.Show();
+            }
+        }
+        private void Btn_Display_Click(object sender, RoutedEventArgs e) {
+            if (displays[0].IsVisible) {
+                displays[0].Hide();
+            } else if (displays[0].IsLoaded) {
+                displays[0].Show();
+            } else {
+                displays[0] = new Display(2); //TODO device id
+                displays[0].Show();
             }
         }
     }

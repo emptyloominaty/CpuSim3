@@ -10,9 +10,9 @@ namespace CpuSim3 {
     public static class Assembler {
         public static bool os = true;
 
-        public static int CheckHex(string valIn) {
+        public static uint CheckHex(string valIn) {
             string val = valIn;
-            int val2 = 0;
+            uint val2 = 0;
             string[] chars;
             bool hex = false;
             chars = valIn.Select(c => c.ToString()).ToArray();
@@ -23,9 +23,9 @@ namespace CpuSim3 {
                 }
             }
             if (hex) {
-                val2 = Convert.ToInt32(val, 16);
+                val2 = Convert.ToUInt32(val, 16);
             } else if (Functions.IsNumeric(valIn)) {
-                val2 = Convert.ToInt32(val);
+                val2 = Convert.ToUInt32(val);
             }
             return val2;
         }
@@ -102,7 +102,7 @@ namespace CpuSim3 {
                 if (line[0] == "CONST" || line[0] == "const") {
                     string[] chars;
                     string val = line[3];
-                    int val2;
+                    uint val2;
                     bool hex = false;
                     name = line[2];
                     chars = line[3].Select(c => c.ToString()).ToArray();
@@ -113,9 +113,9 @@ namespace CpuSim3 {
                         }
                     }
                     if (hex) {
-                        val2 = Convert.ToInt32(val, 16);
+                        val2 = Convert.ToUInt32(val, 16);
                     } else {
-                        val2 = Convert.ToInt32(val);
+                        val2 = Convert.ToUInt32(val);
                     }
                     
                     consts[constIdx] = new AsVar(name, val2, 0, Convert.ToByte(line[1]));
@@ -128,7 +128,7 @@ namespace CpuSim3 {
 
                         string[] chars;
                         string val = line[3];
-                        int val2;
+                        uint val2;
                         bool hex = false;
                         name = line[2];
                         chars = line[3].Select(c => c.ToString()).ToArray();
@@ -139,9 +139,9 @@ namespace CpuSim3 {
                             }
                         }
                         if (hex) {
-                            val2 = Convert.ToInt32(val, 16);
+                            val2 = Convert.ToUInt32(val, 16);
                         } else {
-                            val2 = Convert.ToInt32(val);
+                            val2 = Convert.ToUInt32(val);
                         }
 
                         vars[varIdx] = new AsVar(name, val2, 0, Convert.ToByte(line[1]));
@@ -416,14 +416,13 @@ namespace CpuSim3 {
     }
 
 
-
     public class AsVar {
         public string name;
-        public int value;
+        public uint value;
         public uint address;
         public byte bytes;
 
-        public AsVar(string name, int value, uint address, byte bytes) {
+        public AsVar(string name, uint value, uint address, byte bytes) {
             this.name = name;
             this.value = value;
             this.address = address;

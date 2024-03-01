@@ -105,19 +105,19 @@
     0x000070: 00 FF F0 F0 FF FF FF FF 00 00 00 00 FF FF FF FF
         </TextBlock>
         <TextBox HorizontalAlignment="Left" Margin="20,237,0,0" TextWrapping="Wrap" Text="0x000000" VerticalAlignment="Top" Width="90" TextChanged="TextBox_MemoryViewer" Grid.Row="1"/>
-        <Button Name="BtnAutoRefresh" Content="Auto Refresh: Off" HorizontalAlignment="Left" Margin="150,0,0,224" Click="Btn_AutoRefresh" VerticalAlignment="Bottom" Grid.Row="1"/>
+        <Button Name="BtnAutoRefresh" Content="Auto Refresh: Off" HorizontalAlignment="Left" Margin="154,235,0,0" Click="Btn_AutoRefresh" VerticalAlignment="Top" Grid.Row="1"/>
 
 
-        <TextBox Name="CodeEditor"  Margin="0,250,0,0" TextWrapping="Wrap" Text="" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" AcceptsReturn="True" HorizontalAlignment="Center" VerticalAlignment="Center" Width="350" Height="502" Grid.RowSpan="2"/>
+        <TextBox Name="CodeEditor"  Margin="80,250,0,0" TextWrapping="Wrap" Text="" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" AcceptsReturn="True" HorizontalAlignment="Center" VerticalAlignment="Center" Width="450" Height="502" Grid.RowSpan="2"/>
         <Button Content="Load ASM Code" HorizontalAlignment="Left" Margin="625,425,0,0" Grid.Row="1" VerticalAlignment="Top" RenderTransformOrigin="0,0" Click="Btn_LoadASM"/>
-        <Button Content="Load Machine Code" HorizontalAlignment="Left" Margin="803,425,0,0" Grid.Row="1" VerticalAlignment="Top" RenderTransformOrigin="0,0" Click="Btn_LoadMC"/>
-        <Button Name="Btn_AppOS" Content="OS" HorizontalAlignment="Left" Margin="768,425,0,0" VerticalAlignment="Top" Click="Btn_AppOS_Click" Grid.Row="1"/>
+        <Button Content="Load Machine Code" HorizontalAlignment="Left" Margin="883,425,0,0" Grid.Row="1" VerticalAlignment="Top" RenderTransformOrigin="0,0" Click="Btn_LoadMC"/>
+        <Button Name="Btn_AppOS" Content="OS" HorizontalAlignment="Left" Margin="808,425,0,0" VerticalAlignment="Top" Click="Btn_AppOS_Click" Grid.Row="1"/>
 
         <TextBox HorizontalAlignment="Left" Margin="20,0,0,287" TextWrapping="Wrap" Text="0" VerticalAlignment="Bottom" Width="120" Name="TextBox_Interrupt" Grid.Row="1"/>
         <Button Name="BtnInterrupt" Content="Interrupt" HorizontalAlignment="Left" Margin="150,0,0,286" Click="Btn_Interrupt" VerticalAlignment="Bottom" Grid.Row="1"/>
 
-        <TextBox Width="80" Height="80" Name="textBoxKey"
-           KeyDown="OnKeyDownHandler"/>
+        <!--<TextBox Width="80" Height="30" Name="textBoxKey"
+           KeyDown="OnKeyDownHandler" Margin="780,200,740,170"/>-->
 
         <Canvas Height="200" Width="600" Name="cpuUsageCanvas" Margin="990,20,10,180" >
             <!-- X-Axis -->
@@ -140,7 +140,9 @@
         <TextBlock Name="cpuUsageSlider" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="1258,228,0,0" TextWrapping="Wrap" Text="100ms "/>
         <TextBlock x:Name="Usage_Text_Avg" HorizontalAlignment="Left" Margin="1375,250,0,-114" TextWrapping="Wrap" Text="Avg Cpu Usage: 0%" Grid.RowSpan="2"/>
 
-        <Button Name="Btn_MemoryViewer" Content="Memory Viewer" HorizontalAlignment="Left" Margin="758,26,0,0" VerticalAlignment="Top" Click="Btn_MemoryViewer_Click"/>
+        <Button Name="Btn_MemoryViewer" Content="Memory Viewer" HorizontalAlignment="Left" Margin="357,235,0,0" VerticalAlignment="Top" Click="Btn_MemoryViewer_Click" Grid.Row="1"/>
+        <StackPanel  Height="350" Width="450" Name="DeviceList" Margin="0,316,23,0" Grid.RowSpan="2" VerticalAlignment="Top" HorizontalAlignment="Right">
+        </StackPanel>
 
     </Grid>
 </Window>

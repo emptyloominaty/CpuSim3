@@ -13,13 +13,13 @@ namespace CpuSim3 {
         public Thread deviceThread;
         public uint startAddress;
         public byte id = 0;
-
+        public byte type = 0;
 
         public Device(byte type, byte id, uint bufferStartAddress, uint bufferSize) {
             //Array.Clear(memory, 0, memory.Length);
             startAddress = (uint)(8388608 + (524288 * id));
             this.id = id;
-
+            this.type = type;
             //Memory.Data
 
             for (uint i = 0; i <= 0xFF; i++) {

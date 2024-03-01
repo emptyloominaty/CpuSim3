@@ -1,0 +1,26 @@
+const 4 a 256
+const 4 bw 20
+const 4 bh 20
+const 4 width 600
+const 3 frameBufferAddress 0x901000
+
+LD3 r20 frameBufferAddress
+LD4 r0 a
+LDI1 r1 0
+LD4 r12 bw
+LD4 r21 bh
+LD4 r22 width
+LDI1 r3 0
+JSR loop
+STOP
+
+<loop>
+INC r3
+STR1 r1 r20
+INC r20
+JG r0 r1 loop
+RFS
+
+
+
+

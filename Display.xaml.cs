@@ -51,6 +51,14 @@ namespace CpuSim3 {
             colorMode = Memory.Read(deviceAddress + 0x0108);
             frameBufferStart = deviceAddress + Functions.ConvertTo24Bit(Memory.Read(deviceAddress + 0x0105), Memory.Read(deviceAddress + 0x0106), Memory.Read(deviceAddress + 0x0107));
 
+            if (width>2048) {
+                width = 2048;
+            }
+            if (height>2048) {
+                height = 2048;
+            }
+
+            bitmap.Lock();
             for (int y = 0; y < height; y++) {
                 for (int x = 0; x < width; x++) {
                     byte colorVal = Memory.Read(frameBufferStart);
@@ -61,13 +69,13 @@ namespace CpuSim3 {
                     byte gg = (byte)(green * 36);
                     byte bb = (byte)(blue * 85);
                     Color color = Color.FromArgb(255, rr, gg, bb);
-                    DrawPixel(1+x, 1+y, color);
+                    DrawPixel(x*pxSize, y*pxSize, color);
                     frameBufferStart++;
                 }
             }
-            DrawPixel(10, 10, Colors.Green);
-            DrawPixel(100, 200, Colors.Red);
-            DisplayCanvas.InvalidateVisual();
+            bitmap.AddDirtyRect(new Int32Rect(0, 0, 1200, 960));
+            bitmap.Unlock();
+            //DisplayCanvas.InvalidateVisual();
 
         }
 
@@ -78,8 +86,6 @@ namespace CpuSim3 {
                 
             int stride = bitmap.PixelWidth * (bitmap.Format.BitsPerPixel / 8);
             int pixelIndex = y * stride + x * 4;
-
-            bitmap.Lock();
 
             unsafe {
                 byte* pBackBuffer = (byte*)bitmap.BackBuffer;
@@ -98,9 +104,8 @@ namespace CpuSim3 {
                 }
             }
 
-            bitmap.AddDirtyRect(new Int32Rect(x, y, 2, 2));
-            bitmap.Unlock();
-
+           
+  
         }
 
 

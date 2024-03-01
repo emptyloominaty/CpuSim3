@@ -1,0 +1,48 @@
+const 4 a 256
+const 4 bw 20
+const 4 bh 20
+const 4 width 599
+const 3 frameBufferAddress 0x901000
+
+LD3 r20 frameBufferAddress
+LD4 r0 a
+LDI1 r1 0
+LD4 r12 bw
+LD4 r21 bh
+LD4 r22 width
+LDI1 r3 0
+JSR loop
+STOP
+
+<loop>
+INC r3
+STR1 r1 r20
+INC r20
+JG r3 r12 incLine
+JG r0 r1 loop
+RFS
+
+<incLine>
+LDI1 r3 0
+ADD r20 r22 r20
+SUB r20 r12 r20   
+INC r23
+JG r23 r21 incColor
+JMP loop
+
+<incColor>
+INC r1
+LDI1 r23 0
+MOV r21 r25 
+DEC r25
+MOV r22 r26 
+DEC r26
+MUL r26 r25 r24 
+SUB r20 r24 r20
+SUB r20 r22 r20
+JMP loop
+
+
+
+
+

@@ -1,0 +1,85 @@
+const 4 width 511
+const 3 frameBufferAddress 0x901000
+const 3 keyboardAddress 0x800018
+const 3 readBufferAddress 0x1E00
+const 3 writeBufferAddress 0x1E01
+const 3 bufferStart 0x1E02
+
+
+;read idx address;
+LDI3 r27 0x1EFE
+;write idx address;
+LDI3 r28 0x1EFF
+;buffer start address;
+LDI3 r29 0x1F00
+
+;load device address;
+LD3 r30 frameBufferAddress
+LD3 r31 keyboardAddress
+
+;keyboard interrupt pointer;
+LDI3 r0 0x050200
+LDI3 r1 0x000180
+STR3 r0 r1
+
+JSR loop
+STOP
+
+<loop>
+;load write and read buffer index;
+LDR1 r0 r27
+LDR1 r1 r28
+;compare;
+JG r1 r0 readKBBuffer
+;check overflow;
+LDI2 r25 255
+JE r0 r25 resetKBBuffer
+;;
+HLT
+JMP loop
+
+<readKBBuffer>
+;read index + buffer start address;
+ADD r29 r0 r3
+;load key from buffer;
+LDR1 r4 r3
+;inc read index;
+INC r0
+;store read index to ram;
+STR1 r0 r27
+JMP loop
+
+
+<resetKBBuffer>
+LDI1 r0 0
+STR1 r0 r27
+LDI1 r1 0
+STR1 r1 r28
+JMP loop
+
+
+;keyboard interrupt;
+.ORG 0x050200
+SDI
+PUSH4 r0
+PUSH4 r1
+PUSH4 r2
+;load key pressed from keyboard device;
+LDR1 r0 r31
+;load write index;
+LDR1 r1 r28 
+;copy buffer start address;
+MOV r29 r2
+;write index + buffer start adress;
+ADDE r2 r1
+;store key to buffer; 
+STR1 r0 r2
+;inc write index;
+INC r1
+;store write index;
+STR1 r1 r28
+POP4 r2
+POP4 r1
+POP4 r0
+SEI
+RFI

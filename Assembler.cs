@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace CpuSim3 {
@@ -39,7 +40,7 @@ namespace CpuSim3 {
             string[] lines;
 
             //remove comments ;;
-            code = code.Replace(";[^:\\r\\n]+(?=;)", "");
+            code = Regex.Replace(code, ";(.*?);", "");
             code = code.Replace(";", "");
 
             lines = code.Split("\r\n");
@@ -361,6 +362,8 @@ namespace CpuSim3 {
 
                             } else {
                                 //FUNCTIONS (JUMPS)
+                                //Debug.WriteLine(instructions[i].values[j]);
+                                //Debug.WriteLine(functionsMap[instructions[i].values[j]].address);
                                 byte[] jumpAddress = Functions.ConvertFrom24Bit(functionsMap[instructions[i].values[j]].address);
                                 Memory.Write((uint)(instructions[i].address + k), jumpAddress[0], true);
                                 Memory.Write((uint)(instructions[i].address + k + 1), jumpAddress[1], true);

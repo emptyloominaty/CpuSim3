@@ -92,7 +92,7 @@ namespace CpuSim3 {
         }
 
         public static byte Read(int address) {
-            if (address < 0 && address >= Data.Length) {
+            if (address < 0 || address >= Data.Length) {
                 return 0;
             }
             return Data[address];

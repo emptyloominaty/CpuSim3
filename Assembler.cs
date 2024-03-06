@@ -78,9 +78,11 @@ namespace CpuSim3 {
 
 
             for (int i = 0; i<osFunctions.Count; i++) {
-                functions[i] = new AsFunction(osFunctions[i].name, 9999, osFunctions[i].address);
-                functionsMap.Add(osFunctions[i].name, functions[functionIdx]);
-                functionIdx++;
+                if (!functionsMap.ContainsKey(osFunctions[i].name)) {
+                    functions[functionIdx] = new AsFunction(osFunctions[i].name, 9999, osFunctions[i].address);
+                    functionsMap.Add(osFunctions[i].name, functions[functionIdx]);
+                    functionIdx++;
+                }
             }  
             
 
@@ -92,26 +94,85 @@ namespace CpuSim3 {
             int orgAddress = 0;
             int orgBytes = 0;
             byte inOrg = 0;
+
+
+            int storedI = 0;
+            bool continueProgram = false;
+            restart:
             for (int i = 0; i < lines.Length; i++) {
                 string[] line;
                 string name;
-                int address = 0;
                 byte[] values = new byte[6];
 
-                
-
-                line = lines[i].Split(" ");
-
-                if (functionMode && i == 0) {
-                    if (line[0] != "FUNC") {
-                        Debug.WriteLine("ERROR:" + line[0]);
-                        break;
-                    }
-                    int startAddress = codeStartAddress + GetFuncAddress();
-                    osFunctions.Add(new OsFunction(line[1], 0, startAddress));
-                    
-                    continue;
+                if (continueProgram) {
+                    i = storedI;
                 }
+                    line = lines[i].Split(" ");
+
+                if (continueProgram) {
+                    continueProgram = false;    
+
+                    consts = new AsVar[lines.Length];
+                    vars = new AsVar[lines.Length];
+                    instructions = new AsInstruction[lines.Length];
+                    functions = new AsFunction[lines.Length];
+
+                    functionsMap = new Dictionary<string, AsFunction>();
+                    varsMap = new Dictionary<string, AsVar>();
+                    constsMap = new Dictionary<string, AsVar>();
+
+                    constIdx = 0;
+                    varIdx = 0;
+                    instructionIdx = 0;
+                    functionIdx = 0;
+
+
+                    for (int m = 0; m < osFunctions.Count; m++) {
+                        if (!functionsMap.ContainsKey(osFunctions[m].name)) {
+                            functions[functionIdx] = new AsFunction(osFunctions[m].name, 9999, osFunctions[m].address);
+                            functionsMap.Add(osFunctions[m].name, functions[functionIdx]);
+                            functionIdx++;
+                        }
+                    }
+
+                    bytes = 4;
+                    constsBytes = 0;
+                    varsBytes = 0;
+
+                    org = false;
+                    orgAddress = 0;
+                    orgBytes = 0;
+                    inOrg = 0;
+                    if (line[0] == "FUNC") {
+          
+                        functionMode = true;
+                        os = false;
+                        codeStartAddress = 0x600000;
+                        varStartAddress = 0x3FF000;
+                        int startAddress = codeStartAddress + GetFuncAddress();
+                        osFunctions.Add(new OsFunction(line[1], 0, startAddress));
+                        continue;
+                    } else if (line[0] == "OS") {
+                        codeStartAddress = 7340032;
+                        varStartAddress = 0x000300;
+                        functionMode = false;
+                        os = true;
+                        continue;
+                    } else if (line[0] == "APP") {
+                        codeStartAddress = 4194304;
+                        varStartAddress = 0x004000;
+                        functionMode = false;
+                        os = false;
+                        continue;
+                    }
+                }
+
+                if (line[0] == "FUNC" || line[0] == "APP" || line[0] == "OS") {
+                    storedI = i;
+                    continueProgram = true;
+                    break;
+                }
+
 
                 bool func = line[0].Contains("<") && line[0].Contains(">");
 
@@ -416,14 +477,20 @@ namespace CpuSim3 {
             if (functionMode) {
                 osFunctions[osFunctions.Count - 1].size = bytes + constsBytes + varsBytes + 6;
             }
+            
 
 
             Debug.WriteLine("----------");
             Debug.WriteLine("Size: "+bytes); 
             Debug.WriteLine("Const: " + constsBytes);
             Debug.WriteLine("Var: " + varsBytes);
-
+            
             Debug.WriteLine("----------");
+
+            if (continueProgram) {
+                goto restart;
+            }
+ 
             for (int i = 0; i < osFunctions.Count; i++) {
                 Debug.WriteLine("Function"+i+": " + osFunctions[i].name+" (" + osFunctions[i].address.ToString("X6") +")");
             }

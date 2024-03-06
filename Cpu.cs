@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -51,8 +52,9 @@ namespace CpuSim3 {
         public bool fetchedOpCode = false;
         public int waitCycles = 0;
         public int interruptId = 0;
+        public bool debugCpu = false;
 
-        public uint[] registers;
+        public int[] registers;
         //r0-r31
         //(r32)
         //Program Counter(r33)
@@ -71,7 +73,7 @@ namespace CpuSim3 {
         }
 
         public void Reset() {
-            registers = new uint[38];
+            registers = new int[38];
             for (int i = 0; i < registers.Length; i++) {
                 registers[i] = 0;
             }
@@ -188,6 +190,13 @@ namespace CpuSim3 {
                     }
                     if (cyclesI <= 0) {
                         Execute();
+                        if (debugCpu) {
+                            Debug.WriteLine(instructionsDone + ": " + opCodes[instructionData[0]].name+" "+ instructionData[1] + " "+ instructionData[2] + " "+ instructionData[3] + " "+ instructionData[4]
+                                +" - registers - "+" r0: "+ registers[0]+ " r1: " + registers[1]+ " r2: " + registers[2] + " r3: " + registers[3] + " r4: " + registers[4]
+                                + " r5: " + registers[5] + " r6: " + registers[6] + " r7: " + registers[7] + " r8: " + registers[8] + " r9: " + registers[9] + " r10: " + registers[10]
+                                + " r11: " + registers[11] + " r12: " + registers[12] + " r13: " + registers[13] + " r14: " + registers[14] + " r15: " + registers[15]);
+                        }
+                        
                     }
                     break;
             }
@@ -260,18 +269,18 @@ namespace CpuSim3 {
 
         public void Execute() {
             instructionsDone++;
-            uint val;
-            uint load;
+            int val;
+            int load;
             byte[] store;
             byte byte1;
             byte byte2;
             byte byte3; 
             byte byte4;
             byte[] bytes;
-            uint address1;
-            uint address2;
-            uint address3;
-            uint address4;
+            int address1;
+            int address2;
+            int address3;
+            int address4;
             switch (op) {
                 case 1: //ADD  r1+r2=r3
                     val = registers[instructionData[1]] + registers[instructionData[2]];
@@ -619,7 +628,7 @@ namespace CpuSim3 {
                         Memory.Write(registers[34], (byte)registers[36]);
  
                         registers[34]++;
-                        registers[33] = Functions.ConvertTo24Bit(Memory.Read((uint)instructionData[1] * 3), Memory.Read(((uint)instructionData[1] * 3) + 1), Memory.Read(((uint)instructionData[1] * 3) + 2));
+                        registers[33] = Functions.ConvertTo24Bit(Memory.Read((int)instructionData[1] * 3), Memory.Read(((int)instructionData[1] * 3) + 1), Memory.Read(((int)instructionData[1] * 3) + 2));
                     }
                     break;
                 case 58: //RFI
@@ -839,7 +848,7 @@ namespace CpuSim3 {
             }
         }
 
-        public byte LoadByte(uint pc) {
+        public byte LoadByte(int pc) {
             return Memory.Read(pc);
         }
 

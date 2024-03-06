@@ -10,7 +10,7 @@ using System.Windows.Input;
 namespace CpuSim3.Devices {
     public class Keyboard : Device {
 
-        public Keyboard(byte type, byte id, uint bufferStartAddress, uint bufferSize) 
+        public Keyboard(byte type, byte id, int bufferStartAddress, int bufferSize) 
             : base(0, id, bufferStartAddress, bufferSize) {
         }
 

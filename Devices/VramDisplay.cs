@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace CpuSim3.Devices {
     public class VramDisplay : Device {
 
-        public VramDisplay(byte type, byte id, uint bufferStartAddress, uint bufferSize,uint vramSize, uint screenWidth, uint screenHeight) 
+        public VramDisplay(byte type, byte id, int bufferStartAddress, int bufferSize,int vramSize, int screenWidth, int screenHeight) 
             : base(4, id, bufferStartAddress, bufferSize) {
 
             byte[] screenWidthB = Functions.ConvertFrom16Bit(screenWidth);
@@ -28,7 +28,7 @@ namespace CpuSim3.Devices {
 
 
 
-            for (uint i = 0x100; i < vramSize+0x0100; i++) {
+            for (int i = 0x100; i < vramSize+0x0100; i++) {
                 Memory.DataCanWriteArray[(8388608 + (524288 * id))+i] = true;
             }
 

@@ -23,8 +23,8 @@ namespace CpuSim3 {
         public byte pxSize = 2;
         int width;
         int height;
-        uint frameBufferStart;
-        uint deviceAddress;
+        int frameBufferStart;
+        int deviceAddress;
         byte colorMode;
         WriteableBitmap bitmap;
 
@@ -32,7 +32,7 @@ namespace CpuSim3 {
             InitializeComponent();
             this.id = id;
 
-            deviceAddress = (uint)(8388608 + (524288 * id));
+            deviceAddress = (int)(8388608 + (524288 * id));
             width = Functions.ConvertTo16Bit(Memory.Read(deviceAddress + 0x0100), Memory.Read(deviceAddress + 0x0101));
             height = Functions.ConvertTo16Bit(Memory.Read(deviceAddress + 0x0102), Memory.Read(deviceAddress + 0x0103));
             colorMode = Memory.Read(deviceAddress + 0x0108);
@@ -45,7 +45,7 @@ namespace CpuSim3 {
 
 
         public void UpdateWindow() {
-            deviceAddress = (uint)(8388608 + (524288 * id));
+            deviceAddress = (int)(8388608 + (524288 * id));
             width = Functions.ConvertTo16Bit(Memory.Read(deviceAddress + 0x0100), Memory.Read(deviceAddress + 0x0101));
             height = Functions.ConvertTo16Bit(Memory.Read(deviceAddress + 0x0102), Memory.Read(deviceAddress + 0x0103));
             colorMode = Memory.Read(deviceAddress + 0x0108);

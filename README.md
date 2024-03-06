@@ -22,8 +22,10 @@
 | Interrupt Pointers | 0x000000 | 0x0002FF |
 | OS RAM        | 0x000300 | 0x001FFF |
 | Stack         | 0x002000 | 0x003FFF |
-| App RAM       | 0x004000 | 0x3FFFFF |
-| App ROM       | 0x400000 | 0x6FFFFF |
+| App RAM       | 0x004000 | 0x3FEFFF |
+| Functions RAM | 0x3FF000 | 0x3FFFFF |
+| App ROM       | 0x400000 | 0x5FFFFF | 
+| Functions ROM | 0x600000 | 0x6FFFFF | 
 | OS ROM        | 0x700000 | 0x7FFFFF |
 | Devices       | 0x800000 | 0xFFFFFF |
 

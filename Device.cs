@@ -11,18 +11,18 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 namespace CpuSim3 {
     public class Device {
         public Thread deviceThread;
-        public uint startAddress;
+        public int startAddress;
         public byte id = 0;
         public byte type = 0;
 
-        public Device(byte type, byte id, uint bufferStartAddress, uint bufferSize) {
+        public Device(byte type, byte id, int bufferStartAddress, int bufferSize) {
             //Array.Clear(memory, 0, memory.Length);
-            startAddress = (uint)(8388608 + (524288 * id));
+            startAddress = (int)(8388608 + (524288 * id));
             this.id = id;
             this.type = type;
             //Memory.Data
 
-            for (uint i = 0; i <= 0xFF; i++) {
+            for (int i = 0; i <= 0xFF; i++) {
                 Memory.DataCanWriteArray[(8388608 + (524288 * id)) + i] = true;
             }
 
@@ -76,11 +76,11 @@ namespace CpuSim3 {
             StartDevice();
         }
 
-        public void Write(uint address, byte data) {
+        public void Write(int address, byte data) {
             Memory.Write(address + startAddress, data, true);
         }
 
-        public byte Read(uint address) {
+        public byte Read(int address) {
             return Memory.Read(address + startAddress);
         }
 

@@ -29,8 +29,8 @@ namespace CpuSim3 {
             if (!AddressText.Text.StartsWith("0x") || AddressText.Text.Length <= 2) { //TODO:
                 return;
             }
-            uint address = 0;
-            uint.TryParse(AddressText.Text.Substring(2), System.Globalization.NumberStyles.HexNumber, null, out address);
+            int address = 0;
+            int.TryParse(AddressText.Text.Substring(2), System.Globalization.NumberStyles.HexNumber, null, out address);
 
             string[] add = new string[32];
             for (int i = 0; i < add.Length; i++) {
@@ -40,7 +40,7 @@ namespace CpuSim3 {
             string[] line = new string[32];
             for (int i = 0; i < line.Length; i++) {
                 for (int j = i*16; j < (i+1)*16; j++) {
-                    line[i] += " " + Memory.Read((uint)(address + j)).ToString("X2");
+                    line[i] += " " + Memory.Read((int)(address + j)).ToString("X2");
                 }
             }
            

@@ -1,0 +1,118 @@
+const 4 width 512
+const 3 frameBufferAddress 0x901000
+const 2 color 255
+
+LD3 r31 frameBufferAddress
+LD2 r29 color
+
+;x1 y1 x2 y2;
+LDI2 r1 10
+LDI2 r2 10
+LDI2 r3 20
+LDI2 r4 20
+
+;w,h;
+SUB r3 r1 r3
+SUB r4 r2 r4
+
+;r3 = w;
+;r4 = h;
+
+;r6 = dx1;
+;r7 = dy1;
+;r8 = dx2;
+;r9 = dy2;
+
+LDI4 r6 0
+MOV r6 r7
+MOV r6 r8
+MOV r6 r9
+
+JL r3 r6 w_negative
+JG r3 r6 w_positive
+JMP w_done
+<w_negative>
+LDI4 r6 -1
+JMP w_done
+<w_positive>
+LDI4 r6 1
+<w_done>
+JL r4 r7 h_negative
+JG r4 r7 h_positive
+<h_negative>
+LDI4 r7 -1
+JMP h_done
+<h_positive>
+LDI4 r7 1
+<h_done>
+MOV r6 r8
+MOV r7 r9
+
+MOV r3 r20
+JSR abs
+MOV r20 r10
+
+MOV r4 r20
+JSR abs
+MOV r20 r11
+
+JNG r11 r10 longest_longer
+JMP h2_done
+<longest_longer>
+MOV r10 r12  
+MOV r11 r10
+MOV r12 r11
+<endswap>
+MOV r10 r12
+LDI4 r0 0
+JL r4 r0 h2_negative
+JG r4 r0 h2_positive
+<h2_negative>
+LDI4 r9 -1
+JMP h2_done
+<h2_positive>
+LDI4 r9 1
+<h2_done>
+MOV r10 r12
+SLR r12
+;i(loop);
+LDI4 r13 0
+<loop>
+JSR draw_pixel
+ADD r11 r12 r12
+JNL r12 r10 numerator_greater_longest
+ADD r8 r1 r1
+ADD r9 r2 r2
+JMP loop_continue
+
+<numerator_greater_longest>
+SUB r12 r10 r12
+ADD r6 r1 r1
+ADD r7 r2 r2
+
+<loop_continue>
+INC r13
+JNG r13 r10 loop
+JMP end
+
+<end>
+STOP
+
+<draw_pixel>
+LD4 r20 width
+MUL r20 r2 r20
+ADD r20 r1 r20
+ADD r31 r20 r30
+STR1 r29 r30
+RFS
+
+
+<abs>
+LDI4 r21 0
+JL r20 r21 abs_is_negative
+RFS
+
+<abs_is_negative>
+LDI4 r21 -1
+MUL r21 r20 r20
+RFS

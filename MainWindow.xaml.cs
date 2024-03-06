@@ -277,8 +277,8 @@ namespace CpuSim3 {
         }
 
         private void MemoryLoad() {
-            uint address = 0;
-            uint.TryParse(memoryText.Substring(2), System.Globalization.NumberStyles.HexNumber, null, out address);
+            int address = 0;
+            int.TryParse(memoryText.Substring(2), System.Globalization.NumberStyles.HexNumber, null, out address);
 
             string add0 = address.ToString("X6");
             string add1 = (address + 16).ToString("X6");
@@ -291,35 +291,35 @@ namespace CpuSim3 {
 
             string line0 = "";
             for (int i = 0; i < 16; i++) {
-                line0 += " " + Memory.Read((uint)(address + i)).ToString("X2");
+                line0 += " " + Memory.Read((int)(address + i)).ToString("X2");
             }
             string line1 = "";
             for (int i = 16; i < 32; i++) {
-                line1 += " " + Memory.Read((uint)(address + i)).ToString("X2");
+                line1 += " " + Memory.Read((int)(address + i)).ToString("X2");
             }
             string line2 = "";
             for (int i = 32; i < 48; i++) {
-                line2 += " " + Memory.Read((uint)(address + i)).ToString("X2");
+                line2 += " " + Memory.Read((int)(address + i)).ToString("X2");
             }
             string line3 = "";
             for (int i = 48; i < 64; i++) {
-                line3 += " " + Memory.Read((uint)(address + i)).ToString("X2");
+                line3 += " " + Memory.Read((int)(address + i)).ToString("X2");
             }
             string line4 = "";
             for (int i = 64; i < 80; i++) {
-                line4 += " " + Memory.Read((uint)(address + i)).ToString("X2");
+                line4 += " " + Memory.Read((int)(address + i)).ToString("X2");
             }
             string line5 = "";
             for (int i = 80; i < 96; i++) {
-                line5 += " " + Memory.Read((uint)(address + i)).ToString("X2");
+                line5 += " " + Memory.Read((int)(address + i)).ToString("X2");
             }
             string line6 = "";
             for (int i = 96; i < 112; i++) {
-                line6 += " " + Memory.Read((uint)(address + i)).ToString("X2");
+                line6 += " " + Memory.Read((int)(address + i)).ToString("X2");
             }
             string line7 = "";
             for (int i = 112; i < 128; i++) {
-                line7 += " " + Memory.Read((uint)(address + i)).ToString("X2");
+                line7 += " " + Memory.Read((int)(address + i)).ToString("X2");
             }
 
             MemoryLine0.Text = "0x" + add0 + ": " + line0;
@@ -353,10 +353,16 @@ namespace CpuSim3 {
         private void Btn_AppOS_Click(object sender, RoutedEventArgs e) {
             if (Assembler.os) {
                 Assembler.os = false;
+                Assembler.functionMode = false;
                 Btn_AppOS.Content = "App";
-            } else {
+            } else if (!Assembler.functionMode) {
                 Assembler.os = true;
+                Assembler.functionMode = false;
                 Btn_AppOS.Content = "OS";
+            } else {
+                Assembler.os = false;
+                Assembler.functionMode = true;
+                Btn_AppOS.Content = "Func";
             }
         }
 
@@ -382,7 +388,7 @@ namespace CpuSim3 {
         public long cpuUpdateTimerA = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
         public long cpuUpdateTimerB = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
 
-        public uint cpuUsageTime = 100;
+        public int cpuUsageTime = 100;
 
         public void UpdateCpuUsageGraph() {
             cpuUpdateTimerA = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
@@ -433,8 +439,8 @@ namespace CpuSim3 {
 
         private void Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
             if (this.IsLoaded) {
-                cpuUsageSlider.Text = $"{(uint)((Slider)sender).Value}ms";
-                cpuUsageTime = (uint)((Slider)sender).Value;
+                cpuUsageSlider.Text = $"{(int)((Slider)sender).Value}ms";
+                cpuUsageTime = (int)((Slider)sender).Value;
             }
         }
 

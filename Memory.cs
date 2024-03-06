@@ -91,14 +91,14 @@ namespace CpuSim3 {
             Write(7340082, 0x21, true);*/
         }
 
-        public static byte Read(uint address) {
-            if (address >= Data.Length) {
+        public static byte Read(int address) {
+            if (address < 0 && address >= Data.Length) {
                 return 0;
             }
             return Data[address];
         }
-        public static void Write(uint address, byte data, bool forceWrite = false) {
-            if (address < Data.Length) {
+        public static void Write(int address, byte data, bool forceWrite = false) {
+            if (address >= 0 && address < Data.Length) {
                 if (DataCanWriteArray[address] || forceWrite) {
                     Data[address] = data;
                 }

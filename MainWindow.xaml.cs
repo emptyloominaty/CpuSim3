@@ -353,14 +353,17 @@ namespace CpuSim3 {
         private void Btn_AppOS_Click(object sender, RoutedEventArgs e) {
             if (Assembler.os) {
                 Assembler.os = false;
+                Assembler.app = true;
                 Assembler.functionMode = false;
                 Btn_AppOS.Content = "App";
-            } else if (!Assembler.functionMode) {
+            } else if (Assembler.functionMode) {
                 Assembler.os = true;
+                Assembler.app = false;
                 Assembler.functionMode = false;
                 Btn_AppOS.Content = "OS";
             } else {
                 Assembler.os = false;
+                Assembler.app = false;
                 Assembler.functionMode = true;
                 Btn_AppOS.Content = "Func";
             }

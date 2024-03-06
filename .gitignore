@@ -3,7 +3,9 @@
 # Get latest from https://github.com/github/gitignore/blob/main/Unity.gitignore
 #
 /[Bb]in/
-
+/obj/Debug
+/obj/Release
+/obj/x64
 
 # Visual Studio cache directory
 .vs/

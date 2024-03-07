@@ -38,6 +38,7 @@ namespace CpuSim3 {
         public TextBox textBoxKey;
 
         public MemoryViewer memoryViewerWindow = new MemoryViewer();
+        public DebugWindow debugWindow = new DebugWindow();
 
         public List<StackPanel> deviceList = new List<StackPanel>();
 
@@ -47,7 +48,8 @@ namespace CpuSim3 {
             GlobalVars.devices = devices;
             GlobalVars.displays = displays;
 
-            memoryViewerWindow.Show();
+            //memoryViewerWindow.Show();
+            //debugWindow.Show();
 
 
             CompositionTarget.Rendering += Loop;
@@ -144,7 +146,10 @@ namespace CpuSim3 {
                 memoryViewerWindow.UpdateWindow();
             }
 
-            fpsText.Text = "FPS: " + fps + "";
+            if (debugWindow.IsLoaded) {
+                debugWindow.UpdateWindow();
+            }
+
             time1 = DateTime.Now.Ticks / ticks;
 
             Register0.Text = "r0: " + cpu.registers[0].ToString("X8");
@@ -214,8 +219,6 @@ namespace CpuSim3 {
             
 
 
-            DEBUG_Text.Text = "";
-
             
             if (autoRefreshMemory) {
                 //TODO: memory viewer window
@@ -271,8 +274,6 @@ namespace CpuSim3 {
                 cpu.Reset();
                 cpu.cpuRunning = true;
                 BtnCpuToggle.Content = "Stop";
-
-
             }
         }
 
@@ -457,6 +458,19 @@ namespace CpuSim3 {
                 memoryViewerWindow.Show();
             }
         }
+
+        private void Btn_Debug_Click(object sender, RoutedEventArgs e) {
+            if (debugWindow.IsVisible) {
+                debugWindow.Hide();
+            } else if (debugWindow.IsLoaded) {
+                debugWindow.Show();
+            } else {
+                debugWindow = new DebugWindow();
+                debugWindow.Show();
+            }
+        }
+
+
         private void Btn_Display_Click(object sender, RoutedEventArgs e) {
             if (displays[0].IsVisible) {
                 displays[0].Hide();

@@ -10,11 +10,11 @@ none
 false
 TRACE;DEBUG;NET;NET7_0;NETCOREAPP
 C:\Users\Adam.Biskupic\Desktop\1\2\3\Git&IntellijIdea\projects\CpuSim3\App.xaml
-3-1100061423
+41161875318
 
-18-266732100
+191622564565
 200-581953718
-Display.xaml;MainWindow.xaml;MemoryViewer.xaml;
+DebugWindow.xaml;Display.xaml;MainWindow.xaml;MemoryViewer.xaml;
 
-False
+True
 

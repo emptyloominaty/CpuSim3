@@ -189,14 +189,13 @@ namespace CpuSim3 {
                         cyclesI--;
                     }
                     if (cyclesI <= 0) {
-                        Execute();
                         if (debugCpu) {
-                            Debug.WriteLine(instructionsDone + ": " + opCodes[instructionData[0]].name+" "+ instructionData[1] + " "+ instructionData[2] + " "+ instructionData[3] + " "+ instructionData[4]
-                                +" - registers - "+" r0: "+ registers[0]+ " r1: " + registers[1]+ " r2: " + registers[2] + " r3: " + registers[3] + " r4: " + registers[4]
-                                + " r5: " + registers[5] + " r6: " + registers[6] + " r7: " + registers[7] + " r8: " + registers[8] + " r9: " + registers[9] + " r10: " + registers[10]
-                                + " r11: " + registers[11] + " r12: " + registers[12] + " r13: " + registers[13] + " r14: " + registers[14] + " r15: " + registers[15]);
+                            GlobalVars.cpuDebug += " PC:" + (registers[33]-opCodes[op].bytes).ToString("X6") + " " + instructionsDone + ": " + opCodes[instructionData[0]].name + " " + instructionData[1].ToString("X2") + " " + instructionData[2].ToString("X2") + " " + instructionData[3].ToString("X2") + " " + instructionData[4].ToString("X2") + " " + instructionData[5].ToString("X2")
+                                + " - registers - " + " " + registers[0] + " " + registers[1] + " " + registers[2] + " " + registers[3] + " " + registers[4]
+                                + " " + registers[5] + " " + registers[6] + " " + registers[7] + " " + registers[8] + " " + registers[9] + " " + registers[10]
+                                + " " + registers[11] + " " + registers[12] + " " + registers[13] + " " + registers[14] + " " + registers[15] + Environment.NewLine;
                         }
-                        
+                        Execute();
                     }
                     break;
             }

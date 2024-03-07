@@ -13,6 +13,7 @@ namespace CpuSim3 {
         public static bool app = false;
         public static bool functionMode = false;
         public static List<OsFunction> osFunctions = new List<OsFunction>();
+        public static List<OsApp> osApps = new List<OsApp>();
 
         public static int CheckHex(string valIn) {
             string val = valIn;
@@ -83,8 +84,17 @@ namespace CpuSim3 {
                     functionsMap.Add(osFunctions[i].name, functions[functionIdx]);
                     functionIdx++;
                 }
-            }  
-            
+            }
+
+
+            for (int i = 0; i < osApps.Count; i++) {
+                if (!functionsMap.ContainsKey(osApps[i].name)) {
+                    functions[functionIdx] = new AsFunction(osApps[i].name, 9999, osApps[i].address);
+                    functionsMap.Add(osApps[i].name, functions[functionIdx]);
+                    functionIdx++;
+                }
+            }
+
 
             int bytes = 4;
             int constsBytes = 0;
@@ -135,6 +145,15 @@ namespace CpuSim3 {
                         }
                     }
 
+                    for (int m = 0; m < osApps.Count; m++) {
+                        if (!functionsMap.ContainsKey(osApps[m].name)) {
+                            functions[functionIdx] = new AsFunction(osApps[m].name, 9999, osApps[m].address);
+                            functionsMap.Add(osApps[m].name, functions[functionIdx]);
+                            functionIdx++;
+                        }
+                    }
+
+
                     bytes = 4;
                     constsBytes = 0;
                     varsBytes = 0;
@@ -147,22 +166,29 @@ namespace CpuSim3 {
           
                         functionMode = true;
                         os = false;
+                        app = false;
                         codeStartAddress = 0x600000;
                         varStartAddress = 0x3FF000;
                         int startAddress = codeStartAddress + GetFuncAddress();
                         osFunctions.Add(new OsFunction(line[1], 0, startAddress));
+                        codeStartAddress = startAddress;
                         continue;
                     } else if (line[0] == "OS") {
                         codeStartAddress = 7340032;
                         varStartAddress = 0x000300;
                         functionMode = false;
                         os = true;
+                        app = false;
                         continue;
                     } else if (line[0] == "APP") {
                         codeStartAddress = 4194304;
                         varStartAddress = 0x004000;
+                        int startAddress = codeStartAddress + GetAppAddress();
+                        osApps.Add(new OsApp(line[1], 0, startAddress));
+                        codeStartAddress = startAddress;
                         functionMode = false;
                         os = false;
+                        app = true;
                         continue;
                     }
                 }
@@ -250,7 +276,7 @@ namespace CpuSim3 {
                     try {
                         idInst = opcodes.names[line[0].ToUpper()];
                     } catch (Exception e) {
-                        Console.WriteLine("Instruction (" + line[0].ToUpper() + ") does not exist");
+                        GlobalVars.assemblerDebug += i+" - - "+"Instruction (" + line[0].ToUpper() + ") does not exist" + Environment.NewLine;
                         return;
                     }
                     byte bytesInst = opcodes.codes[idInst].bytes;
@@ -306,7 +332,7 @@ namespace CpuSim3 {
 
 
             int constsAddress = codeStartAddress + bytes;
-            if (functionMode) {
+            if (functionMode || app) {
                 Memory.Write(codeStartAddress + bytes, 25, true);
                 constsAddress = codeStartAddress + bytes + 1;
             }
@@ -317,7 +343,7 @@ namespace CpuSim3 {
                     consts[i].address = constsAddress + constsBytes;
                     constsBytes += consts[i].bytes;
                 }
- 
+                GlobalVars.assemblerDebug += "const: " + consts[i].name + " " + (consts[i].address).ToString("X6") + Environment.NewLine;
                 //write consts to memory(rom)
                 byte[] store;
                 if (consts[i].bytes == 1) {
@@ -341,7 +367,7 @@ namespace CpuSim3 {
             }
 
             int ldibytes = bytes + constsBytes;
-            if (functionMode) {
+            if (functionMode || app) {
                 ldibytes += 1;
             }
             Memory.Write(codeStartAddress, 24, true);
@@ -351,7 +377,7 @@ namespace CpuSim3 {
             Memory.Write(codeStartAddress + 3, varInitFunctionAddress[2], true);
 
             int varsAddress = varStartAddress;
-            if (functionMode) {
+            if (functionMode || app) {
                 varsAddress = varStartAddress + 1;
             }
             for (int i = 0; i < varIdx; i++) {
@@ -362,9 +388,10 @@ namespace CpuSim3 {
                 }
 
                 //write vars to memory (ram)
+                GlobalVars.assemblerDebug += "var: " + vars[i].name+" " + (vars[i].address).ToString("X6") + Environment.NewLine;
                 byte[] store;
-                if (vars[i].bytes == 1) { //LDI1
-                    Memory.Write(codeStartAddress + ldibytes, 11); //LDI1
+                if (vars[i].bytes == 1) {
+                    Memory.Write(codeStartAddress + ldibytes, 11, true); //LDI1
                     Memory.Write(codeStartAddress + ldibytes + 1, 0, true);
                     Memory.Write(codeStartAddress + ldibytes + 2, (byte)vars[i].value, true);
                     Memory.Write(codeStartAddress + ldibytes + 3, 4, true); //ST1
@@ -374,21 +401,48 @@ namespace CpuSim3 {
                     Memory.Write(codeStartAddress + ldibytes + 6, varaddress[1], true);
                     Memory.Write(codeStartAddress + ldibytes + 7, varaddress[2], true);
                     ldibytes += 8;
-                } else if (vars[i].bytes == 2) {  //LDI2
+                } else if (vars[i].bytes == 2) {
                     store = Functions.ConvertFrom16Bit((int)vars[i].value);
-                    Memory.Write(vars[i].address, store[0], true);
-                    Memory.Write(vars[i].address + 1, store[1], true);
-                } else if (vars[i].bytes == 3) {  //LDI3
+                    Memory.Write(codeStartAddress + ldibytes, 12, true); //LDI2
+                    Memory.Write(codeStartAddress + ldibytes + 1, 0, true);
+                    Memory.Write(codeStartAddress + ldibytes + 2, store[0], true);
+                    Memory.Write(codeStartAddress + ldibytes + 3, store[1], true);
+                    Memory.Write(codeStartAddress + ldibytes + 4, 6, true); //ST2
+                    Memory.Write(codeStartAddress + ldibytes + 5, 0, true);
+                    byte[] varaddress = Functions.ConvertFrom24Bit(vars[i].address);
+                    Memory.Write(codeStartAddress + ldibytes + 6, varaddress[0], true);
+                    Memory.Write(codeStartAddress + ldibytes + 7, varaddress[1], true);
+                    Memory.Write(codeStartAddress + ldibytes + 8, varaddress[2], true);
+                    ldibytes += 9;
+                } else if (vars[i].bytes == 3) { 
                     store = Functions.ConvertFrom24Bit((int)vars[i].value);
-                    Memory.Write(vars[i].address, store[0], true);
-                    Memory.Write(vars[i].address + 1, store[1], true);
-                    Memory.Write(vars[i].address + 2, store[2], true);
+                    Memory.Write(codeStartAddress + ldibytes, 13, true); //LDI3
+                    Memory.Write(codeStartAddress + ldibytes + 1, 0, true);
+                    Memory.Write(codeStartAddress + ldibytes + 2, store[0], true);
+                    Memory.Write(codeStartAddress + ldibytes + 3, store[1], true);
+                    Memory.Write(codeStartAddress + ldibytes + 4, store[2], true);
+                    Memory.Write(codeStartAddress + ldibytes + 5, 8, true); //ST3
+                    Memory.Write(codeStartAddress + ldibytes + 6, 0, true);
+                    byte[] varaddress = Functions.ConvertFrom24Bit(vars[i].address);
+                    Memory.Write(codeStartAddress + ldibytes + 7, varaddress[0], true);
+                    Memory.Write(codeStartAddress + ldibytes + 8, varaddress[1], true);
+                    Memory.Write(codeStartAddress + ldibytes + 9, varaddress[2], true);
+                    ldibytes += 10;
                 } else if (vars[i].bytes == 4) {  //LDI4
                     store = Functions.ConvertFrom32Bit((int)vars[i].value);
-                    Memory.Write(vars[i].address, store[0], true);
-                    Memory.Write(vars[i].address + 1, store[1], true);
-                    Memory.Write(vars[i].address + 2, store[2], true);
-                    Memory.Write(vars[i].address + 3, store[3], true);
+                    Memory.Write(codeStartAddress + ldibytes, 14, true); //LDI4
+                    Memory.Write(codeStartAddress + ldibytes + 1, 0, true);
+                    Memory.Write(codeStartAddress + ldibytes + 2, store[0], true);
+                    Memory.Write(codeStartAddress + ldibytes + 3, store[1], true);
+                    Memory.Write(codeStartAddress + ldibytes + 4, store[2], true);
+                    Memory.Write(codeStartAddress + ldibytes + 5, store[3], true);
+                    Memory.Write(codeStartAddress + ldibytes + 6, 10, true); //ST4
+                    Memory.Write(codeStartAddress + ldibytes + 7, 0, true);
+                    byte[] varaddress = Functions.ConvertFrom24Bit(vars[i].address);
+                    Memory.Write(codeStartAddress + ldibytes + 8, varaddress[0], true);
+                    Memory.Write(codeStartAddress + ldibytes + 9, varaddress[1], true);
+                    Memory.Write(codeStartAddress + ldibytes + 10, varaddress[2], true);
+                    ldibytes += 11;
                 }
             }
 
@@ -402,7 +456,12 @@ namespace CpuSim3 {
                 int opCode = opcodes.names[iname];
 
                 Memory.Write(instructions[i].address, (byte)opCode,true);
-                Debug.WriteLine(instructions[i].address.ToString("X6"));
+
+                string iValues = "";
+                for (int a = 0; a < instructions[i].values.Length; a++) {
+                    iValues += instructions[i].values[a]+" ";
+                }
+                GlobalVars.assemblerDebug += instructions[i].address.ToString("X6") + " - " + iname + " - " + iValues + Environment.NewLine;
 
                 //-------------------------------------------------------------------
                 if (iname.Equals("INT")) {
@@ -477,26 +536,28 @@ namespace CpuSim3 {
             if (functionMode) {
                 osFunctions[osFunctions.Count - 1].size = bytes + constsBytes + varsBytes + 6;
             }
-            
+            if (app) {
+                osApps[osApps.Count - 1].size = bytes + constsBytes + varsBytes + 6;
+            }
 
-
-            Debug.WriteLine("----------");
-            Debug.WriteLine("Size: "+bytes); 
-            Debug.WriteLine("Const: " + constsBytes);
-            Debug.WriteLine("Var: " + varsBytes);
-            
-            Debug.WriteLine("----------");
+            GlobalVars.assemblerDebug += "----------" + Environment.NewLine;
+            GlobalVars.assemblerDebug += "Size: " + bytes + Environment.NewLine;
+            GlobalVars.assemblerDebug += "Const: " + constsBytes + Environment.NewLine;
+            GlobalVars.assemblerDebug += "Var: " + varsBytes + Environment.NewLine;
+            GlobalVars.assemblerDebug += "----------" + Environment.NewLine;
 
             if (continueProgram) {
                 goto restart;
             }
  
             for (int i = 0; i < osFunctions.Count; i++) {
-                Debug.WriteLine("Function"+i+": " + osFunctions[i].name+" (" + osFunctions[i].address.ToString("X6") +")");
+                GlobalVars.assemblerDebug += "Function" + i + ": " + osFunctions[i].name + " (" + osFunctions[i].address.ToString("X6") + ")" + Environment.NewLine; ;
+            }
+            for (int i = 0; i < osApps.Count; i++) {
+                GlobalVars.assemblerDebug += "App" + i + ": " + osApps[i].name + " (" + osApps[i].address.ToString("X6") + ")" + Environment.NewLine; ;
             }
 
-
-            }
+        }
 
         public static string RemoveRfromCode(string str) {
             bool found = System.Text.RegularExpressions.Regex.IsMatch(str, @"\b([R-R-r-r][0-9]{1,2})");
@@ -534,9 +595,17 @@ namespace CpuSim3 {
             for (int i = 0; i<osFunctions.Count; i++) {
                 address += osFunctions[i].size;
             }
-            Debug.WriteLine(address);
             return address;
         }
+        public static int GetAppAddress() {
+            int address = 0;
+            for (int i = 0; i < osApps.Count; i++) {
+                address += osApps[i].size;
+            }
+            return address;
+        }
+
+        
 
     }
 
@@ -590,6 +659,18 @@ namespace CpuSim3 {
         public int address;
 
         public OsFunction(string name, int size, int address) {
+            this.name = name;
+            this.size = size;
+            this.address = address;
+        }
+    }
+
+    public class OsApp {
+        public string name;
+        public int size;
+        public int address;
+
+        public OsApp(string name, int size, int address) {
             this.name = name;
             this.size = size;
             this.address = address;

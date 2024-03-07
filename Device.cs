@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -72,7 +73,7 @@ namespace CpuSim3 {
             Memory.Data[startAddress+29] = 0;
             Memory.Data[startAddress+30] = 0;
 
-            Debug.WriteLine("DEVICE_INITIALISED_"+id+" type:"+type);
+            GlobalVars.assemblerDebug += "DEVICE_INITIALISED_" + id + " type:" + type + Environment.NewLine;
             StartDevice();
         }
 

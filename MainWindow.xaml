@@ -12,12 +12,14 @@
             <RowDefinition Height="80*"/>
             <RowDefinition Height="97*"/>
         </Grid.RowDefinitions>
-        <TextBlock Name="fpsText" HorizontalAlignment="Left" Margin="20,5,0,0" TextWrapping="Wrap" Text="Fps: " VerticalAlignment="Top"/>
+
+        <Button Name="Btn_Debug" Content="Debug" HorizontalAlignment="Left" Margin="20,20,0,0" VerticalAlignment="Top" Click="Btn_Debug_Click" />
+
 
         <TextBlock Name="Running" HorizontalAlignment="Left" Margin="150,140,0,-100" TextWrapping="Wrap" Text="Running: " Grid.RowSpan="2"/>
         <TextBlock Name="PC_Text" HorizontalAlignment="Left" Margin="20,240,0,-184" TextWrapping="Wrap" Text="PC: " Grid.RowSpan="2"/>
         <TextBlock Name="SP_Text" HorizontalAlignment="Left" Margin="210,240,0,-184" TextWrapping="Wrap" Text="SP: " Grid.RowSpan="2"/>
-        <TextBlock Name="DEBUG_Text" HorizontalAlignment="Left" Margin="20,31,0,49" TextWrapping="Wrap" Text="DEBUG: " Grid.RowSpan="2"/>
+
         <TextBlock Name="Clock_Text" HorizontalAlignment="Left" Margin="80,140,0,-49" TextWrapping="Wrap" Text="0" Grid.RowSpan="2"/>
 
         <TextBlock Name="IPC_Text" HorizontalAlignment="Left" Margin="20,60,0,-49" TextWrapping="Wrap" Text="IPC:" Grid.RowSpan="2"/>

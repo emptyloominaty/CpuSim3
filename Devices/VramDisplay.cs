@@ -39,7 +39,7 @@ namespace CpuSim3.Devices {
             Write(0x1003, 0xFF);
 
             GlobalVars.displays.Add(new Display(id));
-            GlobalVars.displays[GlobalVars.displays.Count - 1].Show();
+            //GlobalVars.displays[GlobalVars.displays.Count - 1].Show();
         }
 
     }

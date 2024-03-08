@@ -36,6 +36,7 @@ namespace CpuSim3 {
         }
 
         public static void Assemble(string code, OpCodes opcodes) {
+            GlobalVars.assemblerDebug = "";
             /*for (int i = 0; i < 0x800000; i++) {
                 Memory.Data[i] = 0;
             }*/
@@ -58,6 +59,8 @@ namespace CpuSim3 {
             Dictionary<string, AsVar> varsMap = new Dictionary<string, AsVar>();
             Dictionary<string, AsVar> constsMap = new Dictionary<string, AsVar>();
 
+            AsArray[] arrays = new AsArray[lines.Length];
+            Dictionary<string, AsArray> arraysMap = new Dictionary<string, AsArray>();
 
             int codeStartAddress = 7340032;
             int varStartAddress = 0x000300;
@@ -76,7 +79,7 @@ namespace CpuSim3 {
             int varIdx = 0;
             int instructionIdx = 0;
             int functionIdx = 0;
-
+            int arrayIdx = 0;
 
             for (int i = 0; i<osFunctions.Count; i++) {
                 if (!functionsMap.ContainsKey(osFunctions[i].name)) {
@@ -99,6 +102,7 @@ namespace CpuSim3 {
             int bytes = 4;
             int constsBytes = 0;
             int varsBytes = 0;
+            int arrayBytes = 0;
 
             bool org = false;
             int orgAddress = 0;
@@ -131,10 +135,14 @@ namespace CpuSim3 {
                     varsMap = new Dictionary<string, AsVar>();
                     constsMap = new Dictionary<string, AsVar>();
 
+                    arrays = new AsArray[lines.Length];
+                    arraysMap = new Dictionary<string, AsArray>();
+
                     constIdx = 0;
                     varIdx = 0;
                     instructionIdx = 0;
                     functionIdx = 0;
+                    arrayIdx = 0;
 
 
                     for (int m = 0; m < osFunctions.Count; m++) {
@@ -157,6 +165,7 @@ namespace CpuSim3 {
                     bytes = 4;
                     constsBytes = 0;
                     varsBytes = 0;
+                    arrayBytes = 0;
 
                     org = false;
                     orgAddress = 0;
@@ -263,7 +272,34 @@ namespace CpuSim3 {
                         vars[varIdx] = new AsVar(name, val2, 0, Convert.ToByte(line[1]));
                         varsMap.Add(name, vars[varIdx]);
                         varIdx++;
-                    } else if (func) { //function
+                } else if (line[0] == "ARR" || line[0] == "arr") {
+                    string[] chars;
+                    string val = line[1];
+                    int val2;
+                    bool hex = false;
+                    name = line[2];
+                    chars = line[1].Select(c => c.ToString()).ToArray();
+                    if (chars.Length > 2) {
+                        if (chars[0] == "0" && chars[1] == "x") {
+                            hex = true;
+                            val = line[1].Substring(2);
+                        }
+                    }
+                    if (hex) {
+                        val2 = Convert.ToInt32(val, 16);
+                    } else {
+                        val2 = Convert.ToInt32(val);
+                    }
+
+                    consts[constIdx] = new AsVar(name+"_address", 0, 0, 3);
+                    constsMap.Add(name + "_address", consts[constIdx]);
+
+                    arrays[arrayIdx] = new AsArray(name, val2, 0, constIdx);
+                    arraysMap.Add(name, arrays[arrayIdx]);
+
+                    constIdx++;
+                    arrayIdx++;
+                } else if (func) { //function
                     string functionName = line[0].Replace("<", "").Replace(">", "");
                     if (inOrg == 0) {
                         functions[functionIdx] = new AsFunction(functionName, i, codeStartAddress + bytes);
@@ -448,6 +484,21 @@ namespace CpuSim3 {
 
             Memory.Write(codeStartAddress + ldibytes, 25, true);
 
+            //arrays
+            for (int i = 0; i < arrayIdx; i++) {
+                int arrayAddress = varStartAddress + varsBytes + arrayBytes;
+
+                arrays[i].address = arrayAddress;
+                arrayBytes += arrays[i].size;
+                consts[arrays[i].constIdx].value = arrayAddress;
+
+                byte[] store = Functions.ConvertFrom24Bit(arrayAddress);
+                Memory.Write(consts[arrays[i].constIdx].address, store[0], true);
+                Memory.Write(consts[arrays[i].constIdx].address + 1, store[1], true);
+                Memory.Write(consts[arrays[i].constIdx].address + 2, store[2], true);
+
+                GlobalVars.assemblerDebug += "Array: " + arrayAddress.ToString("X6") + " size: " + arrayBytes + Environment.NewLine;
+            }
 
             //write instruction to memory
             for (int i = 0; i < instructionIdx; i++) {
@@ -534,17 +585,20 @@ namespace CpuSim3 {
                 }
             }
             if (functionMode) {
-                osFunctions[osFunctions.Count - 1].size = bytes + constsBytes + varsBytes + 6;
+                osFunctions[osFunctions.Count - 1].size = bytes + constsBytes + varsBytes + arrayBytes + 6;
             }
             if (app) {
-                osApps[osApps.Count - 1].size = bytes + constsBytes + varsBytes + 6;
+                osApps[osApps.Count - 1].size = bytes + constsBytes + varsBytes + arrayBytes + 6;
             }
 
-            GlobalVars.assemblerDebug += "----------" + Environment.NewLine;
-            GlobalVars.assemblerDebug += "Size: " + bytes + Environment.NewLine;
-            GlobalVars.assemblerDebug += "Const: " + constsBytes + Environment.NewLine;
-            GlobalVars.assemblerDebug += "Var: " + varsBytes + Environment.NewLine;
-            GlobalVars.assemblerDebug += "----------" + Environment.NewLine;
+            if (bytes>4) {
+                GlobalVars.assemblerDebug += "----------" + Environment.NewLine;
+                GlobalVars.assemblerDebug += "Size: " + bytes + Environment.NewLine;
+                GlobalVars.assemblerDebug += "Const: " + constsBytes + Environment.NewLine;
+                GlobalVars.assemblerDebug += "Var: " + varsBytes + Environment.NewLine;
+                GlobalVars.assemblerDebug += "Array: " + arrayBytes + Environment.NewLine;
+                GlobalVars.assemblerDebug += "----------" + Environment.NewLine;
+            }
 
             if (continueProgram) {
                 goto restart;
@@ -583,10 +637,13 @@ namespace CpuSim3 {
             string[] bytes;
             byte[] bytes2 = new byte[4194304];
             code = code.Replace("\n", "");
-            bytes = code.Split(' ');
+
+            // 700000 50,700001 20,
+            bytes = code.Split(',');
             for (int i = 0; i < bytes.Length; i++) {
-                bytes2[i] = Convert.ToByte(bytes[i], 16);
-                Memory.Write((int)i + codeStartAddress, bytes2[i],true);
+                string[] data = bytes[i].Split(" ");
+                bytes2[i] = Convert.ToByte(data[1], 16);
+                Memory.Write(Convert.ToInt32(data[0], 16), bytes2[i],true);
             }
         }
 
@@ -652,6 +709,21 @@ namespace CpuSim3 {
             this.address = address;
         }
     }
+
+    public class AsArray {
+        public string name;
+        public int size;
+        public int address;
+        public int constIdx;
+
+        public AsArray(string name, int size, int address, int constIdx) {
+            this.name = name;
+            this.size = size;
+            this.address = address;
+            this.constIdx = constIdx;
+        }
+    }
+
 
     public class OsFunction {
         public string name;

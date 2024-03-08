@@ -147,6 +147,10 @@ Reset Vector: 0x700000
 ## Max Clock(sim)
 * on Amd Ryzen 3 5350G
     -  **10** MHz
+* on Amd Ryzen 9 5900x
+    -  **11.5** MHz
 
 
-        
+## Assembler
+ - Array->Const->Var
+ - Function->App->OS

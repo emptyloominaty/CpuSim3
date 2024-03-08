@@ -351,25 +351,6 @@ namespace CpuSim3 {
             Assembler.LoadMachineCode(CodeEditor.Text); 
         }
 
-        private void Btn_AppOS_Click(object sender, RoutedEventArgs e) {
-            if (Assembler.os) {
-                Assembler.os = false;
-                Assembler.app = true;
-                Assembler.functionMode = false;
-                Btn_AppOS.Content = "App";
-            } else if (Assembler.functionMode) {
-                Assembler.os = true;
-                Assembler.app = false;
-                Assembler.functionMode = false;
-                Btn_AppOS.Content = "OS";
-            } else {
-                Assembler.os = false;
-                Assembler.app = false;
-                Assembler.functionMode = true;
-                Btn_AppOS.Content = "Func";
-            }
-        }
-
         private void Btn_Interrupt(object sender, RoutedEventArgs e) {
             int result = 0;
             if (int.TryParse(TextBox_Interrupt.Text, out result)) {

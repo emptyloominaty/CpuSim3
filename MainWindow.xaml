@@ -113,7 +113,6 @@
         <TextBox Name="CodeEditor"  Margin="80,250,0,0" TextWrapping="Wrap" Text="" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" AcceptsReturn="True" HorizontalAlignment="Center" VerticalAlignment="Center" Width="450" Height="502" Grid.RowSpan="2"/>
         <Button Content="Load ASM Code" HorizontalAlignment="Left" Margin="625,425,0,0" Grid.Row="1" VerticalAlignment="Top" RenderTransformOrigin="0,0" Click="Btn_LoadASM"/>
         <Button Content="Load Machine Code" HorizontalAlignment="Left" Margin="883,425,0,0" Grid.Row="1" VerticalAlignment="Top" RenderTransformOrigin="0,0" Click="Btn_LoadMC"/>
-        <Button Name="Btn_AppOS" Content="OS" HorizontalAlignment="Left" Margin="808,425,0,0" VerticalAlignment="Top" Click="Btn_AppOS_Click" Grid.Row="1"/>
 
         <TextBox HorizontalAlignment="Left" Margin="20,0,0,287" TextWrapping="Wrap" Text="0" VerticalAlignment="Bottom" Width="120" Name="TextBox_Interrupt" Grid.Row="1"/>
         <Button Name="BtnInterrupt" Content="Interrupt" HorizontalAlignment="Left" Margin="150,0,0,286" Click="Btn_Interrupt" VerticalAlignment="Bottom" Grid.Row="1"/>

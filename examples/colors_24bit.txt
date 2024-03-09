@@ -1,0 +1,30 @@
+const 3 frameBufferAddress 0x901000
+const 3 colorModeAddress 0x900108
+const 4 maxColors 16777216
+
+LD3 r20 frameBufferAddress
+LD3 r21 colorModeAddress
+LDI1 r22 3
+STR1 r22 r21
+LD4 r0 maxColors
+JSR loop
+STOP
+
+
+
+<loop>
+STR3 r1 r20
+INC r20
+INC r20
+INC r20
+ADDI2 r1 128
+JE r0 r1 end
+JMP loop
+RFS
+
+<end>
+STOP
+
+
+
+

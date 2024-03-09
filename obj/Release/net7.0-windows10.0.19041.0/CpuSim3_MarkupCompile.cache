@@ -4,11 +4,11 @@
 winexe
 C#
 .cs
-D:\Projects\CpuSim3\obj\x64\Debug\net7.0-windows10.0.19041.0\
+D:\Projects\CpuSim3\obj\Release\net7.0-windows10.0.19041.0\
 CpuSim3
 none
 false
-TRACE;DEBUG;NET;NET7_0;NETCOREAPP
+TRACE;RELEASE;NET;NET7_0;NETCOREAPP
 D:\Projects\CpuSim3\App.xaml
 41161875318
 
@@ -16,5 +16,5 @@ D:\Projects\CpuSim3\App.xaml
 200-418899729
 DebugWindow.xaml;Display.xaml;MainWindow.xaml;MemoryViewer.xaml;
 
-False
+True
 

@@ -1,10 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "c+paTdF36DsMf/6rsMJ/0JBJMm2FbAVN55UHJ0oJOFhV3M5TBgNItDgKT6CubJM/ieaOtr6m7hsWjZHyBujWjQ==",
+  "dgSpecHash": "IXtyw0ehf0ijKl8n3VcJmxe/InUQMSodMvnJwaX9QXs0oVDBxtT12hPs/CJ66rs6iqBuDqkNJe6vUN+YWJNPcQ==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Adam.Biskupic\\Desktop\\1\\2\\3\\Git&IntellijIdea\\projects\\CpuSim3\\CpuSim3.csproj",
+  "projectFilePath": "D:\\Projects\\CpuSim3\\CpuSim3.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\Adam.Biskupic\\.nuget\\packages\\microsoft.windows.sdk.net.ref\\10.0.19041.29\\microsoft.windows.sdk.net.ref.10.0.19041.29.nupkg.sha512"
+    "C:\\Users\\Empty\\.nuget\\packages\\microsoft.windows.sdk.net.ref\\10.0.19041.29\\microsoft.windows.sdk.net.ref.10.0.19041.29.nupkg.sha512"
   ],
   "logs": []
 }

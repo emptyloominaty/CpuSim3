@@ -58,21 +58,58 @@ namespace CpuSim3 {
                 height = 2048;
             }
 
+
             bitmap.Lock();
-            for (int y = 0; y < height; y++) {
-                for (int x = 0; x < width; x++) {
-                    byte colorVal = Memory.Read(frameBufferStart);
-                    int red = ((colorVal & 0xE0) >> 5);
-                    int green = ((colorVal & 0x1C) >> 2);
-                    int blue = (colorVal & 0x03);
-                    byte rr = (byte)(red * 36);
-                    byte gg = (byte)(green * 36);
-                    byte bb = (byte)(blue * 85);
-                    Color color = Color.FromArgb(255, rr, gg, bb);
-                    DrawPixel(x*pxSize, y*pxSize, color);
-                    frameBufferStart++;
+            if (colorMode == 1) {
+                for (int y = 0; y < height; y++) {
+                    for (int x = 0; x < width; x++) {
+                        byte colorVal = Memory.Read(frameBufferStart);
+                        int red = ((colorVal & 0xE0) >> 5);
+                        int green = ((colorVal & 0x1C) >> 2);
+                        int blue = (colorVal & 0x03);
+                        byte rr = (byte)(red * 36);
+                        byte gg = (byte)(green * 36);
+                        byte bb = (byte)(blue * 85);
+                        Color color = Color.FromArgb(255, rr, gg, bb);
+                        DrawPixel(x * pxSize, y * pxSize, color);
+                        frameBufferStart++;
+                    }
+                }
+            } else if (colorMode == 2) {
+                for (int y = 0; y < height; y++) {
+                    for (int x = 0; x < width; x++) {
+                        int colorVal = Functions.ConvertTo16Bit(Memory.Read(frameBufferStart), Memory.Read(frameBufferStart+1));
+
+                        int red = ((colorVal >> 11) & 0x1F);
+                        int green = ((colorVal >> 5) & 0x3F);
+                        int blue = (colorVal & 0x1F);
+
+                        byte rr = (byte)((red << 3) | (red >> 2));
+                        byte gg = (byte)((green << 2) | (green >> 4));
+                        byte bb = (byte)((blue << 3) | (blue >> 2));
+
+
+                        Color color = Color.FromArgb(255, rr, gg, bb);
+                        DrawPixel(x * pxSize, y * pxSize, color);
+                        frameBufferStart+=2;
+                    }
+                }
+            } else if (colorMode == 3) {
+                for (int y = 0; y < height; y++) {
+                    for (int x = 0; x < width; x++) {
+                        byte rr = (byte)Memory.Read(frameBufferStart);
+                        byte gg = (byte)Memory.Read(frameBufferStart + 1);
+                        byte bb = (byte)Memory.Read(frameBufferStart + 2);
+                        Color color = Color.FromArgb(255, rr, gg, bb);
+                        DrawPixel(x * pxSize, y * pxSize, color);
+                        frameBufferStart+=3;
+                    }
                 }
             }
+
+            
+
+
             bitmap.AddDirtyRect(new Int32Rect(0, 0, 1200, 960));
             bitmap.Unlock();
             //DisplayCanvas.InvalidateVisual();

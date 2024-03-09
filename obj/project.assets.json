@@ -1,26 +1,27 @@
 {
   "version": 3,
   "targets": {
-    "net7.0-windows10.0.19041": {}
+    "net7.0-windows10.0.19041": {},
+    "net7.0-windows10.0.19041/any": {}
   },
   "libraries": {},
   "projectFileDependencyGroups": {
     "net7.0-windows10.0.19041": []
   },
   "packageFolders": {
-    "C:\\Users\\Adam.Biskupic\\.nuget\\packages\\": {}
+    "C:\\Users\\Empty\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Adam.Biskupic\\Desktop\\1\\2\\3\\Git&IntellijIdea\\projects\\CpuSim3\\CpuSim3.csproj",
+      "projectUniqueName": "D:\\Projects\\CpuSim3\\CpuSim3.csproj",
       "projectName": "CpuSim3",
-      "projectPath": "C:\\Users\\Adam.Biskupic\\Desktop\\1\\2\\3\\Git&IntellijIdea\\projects\\CpuSim3\\CpuSim3.csproj",
-      "packagesPath": "C:\\Users\\Adam.Biskupic\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Adam.Biskupic\\Desktop\\1\\2\\3\\Git&IntellijIdea\\projects\\CpuSim3\\obj\\",
+      "projectPath": "D:\\Projects\\CpuSim3\\CpuSim3.csproj",
+      "packagesPath": "C:\\Users\\Empty\\.nuget\\packages\\",
+      "outputPath": "D:\\Projects\\CpuSim3\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\Adam.Biskupic\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\Empty\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -74,6 +75,11 @@
           }
         },
         "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.400\\RuntimeIdentifierGraph.json"
+      }
+    },
+    "runtimes": {
+      "any": {
+        "#import": []
       }
     }
   }

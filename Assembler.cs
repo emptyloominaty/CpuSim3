@@ -123,6 +123,9 @@ namespace CpuSim3 {
                 }
                     line = lines[i].Split(" ");
 
+                    line= line.Where(val => val != "").ToArray();
+
+
                 if (continueProgram) {
                     continueProgram = false;    
 
@@ -200,6 +203,10 @@ namespace CpuSim3 {
                         app = true;
                         continue;
                     }
+                }
+                
+                if (line.Length==0) {
+                    continue;
                 }
 
                 if (line[0] == "FUNC" || line[0] == "APP" || line[0] == "OS") {
@@ -559,24 +566,34 @@ namespace CpuSim3 {
                             } else if (!(iname.Equals("JSR") || iname.Equals("JG") || iname.Equals("JNG") || iname.Equals("JL") || iname.Equals("JNL")
                                       || iname.Equals("JC") || iname.Equals("JNC") || iname.Equals("JE") || iname.Equals("JNE") || iname.Equals("JMP"))) {
                                 //VAR MEM ADDRESS
-                                if (varsMap.ContainsKey(instructions[i].values[j])) {
-                                    byte[] varAddress = Functions.ConvertFrom24Bit(varsMap[instructions[i].values[j]].address);
-                                    Memory.Write((int)(instructions[i].address + k), varAddress[0], true);
-                                    Memory.Write((int)(instructions[i].address + k + 1), varAddress[1], true);
-                                    Memory.Write((int)(instructions[i].address + k + 2), varAddress[2], true);
-                                } else if (constsMap.ContainsKey(instructions[i].values[j])) {
-                                    byte[] constAddress = Functions.ConvertFrom24Bit(constsMap[instructions[i].values[j]].address);
-                                    Memory.Write((int)(instructions[i].address + k), constAddress[0], true);
-                                    Memory.Write((int)(instructions[i].address + k + 1), constAddress[1], true);
-                                    Memory.Write((int)(instructions[i].address + k + 2), constAddress[2], true);
+                                try {
+                                    if (varsMap.ContainsKey(instructions[i].values[j])) {
+                                        byte[] varAddress = Functions.ConvertFrom24Bit(varsMap[instructions[i].values[j]].address);
+                                        Memory.Write((int)(instructions[i].address + k), varAddress[0], true);
+                                        Memory.Write((int)(instructions[i].address + k + 1), varAddress[1], true);
+                                        Memory.Write((int)(instructions[i].address + k + 2), varAddress[2], true);
+                                    } else if (constsMap.ContainsKey(instructions[i].values[j])) {
+                                        byte[] constAddress = Functions.ConvertFrom24Bit(constsMap[instructions[i].values[j]].address);
+                                        Memory.Write((int)(instructions[i].address + k), constAddress[0], true);
+                                        Memory.Write((int)(instructions[i].address + k + 1), constAddress[1], true);
+                                        Memory.Write((int)(instructions[i].address + k + 2), constAddress[2], true);
+                                    }
+                                } catch (KeyNotFoundException ex) {
+                                    Debug.WriteLine("Key not found: " + ex.Message);
+                                    GlobalVars.assemblerDebug += "Key not found: " + ex.Message;
                                 }
 
                             } else {
                                 //FUNCTIONS (JUMPS)
-                                byte[] jumpAddress = Functions.ConvertFrom24Bit(functionsMap[instructions[i].values[j]].address);
-                                Memory.Write((int)(instructions[i].address + k), jumpAddress[0], true);
-                                Memory.Write((int)(instructions[i].address + k + 1), jumpAddress[1], true);
-                                Memory.Write((int)(instructions[i].address + k + 2), jumpAddress[2], true);
+                                try {
+                                    byte[] jumpAddress = Functions.ConvertFrom24Bit(functionsMap[instructions[i].values[j]].address);
+                                    Memory.Write((int)(instructions[i].address + k), jumpAddress[0], true);
+                                    Memory.Write((int)(instructions[i].address + k + 1), jumpAddress[1], true);
+                                    Memory.Write((int)(instructions[i].address + k + 2), jumpAddress[2], true);
+                                } catch (KeyNotFoundException ex) {
+                                    Debug.WriteLine("Key not found: " + ex.Message);
+                                    GlobalVars.assemblerDebug += "Key not found: " + ex.Message;
+                                }
                             }
                         } else {
                             break;

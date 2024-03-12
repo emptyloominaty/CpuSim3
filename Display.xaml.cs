@@ -58,6 +58,9 @@ namespace CpuSim3 {
                 height = 2048;
             }
 
+            //512(511)=512
+            width++;
+            height++;
 
             bitmap.Lock();
             if (colorMode == 1) {

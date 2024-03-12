@@ -1,0 +1,62 @@
+var a 10
+var b 15
+var c 0
+
+LDI r0 128
+LDI r2 1000
+LDI r4 1000
+LDI r6 1000
+LDI r8 1000
+JSR ipctest
+STOP
+
+<ipctest>
+JSR test1
+JG r2 r3 ipctest
+JSR test2
+JG r4 r5 ipctest
+JSR test3
+JG r6 r7 ipctest
+JSR test4
+JG r8 r9 ipctest
+INC r1
+LDI8 r3 0
+LDI8 r5 0
+LDI8 r7 0
+LDI8 r9 0
+JG r0 r1 ipctest
+RFS
+
+<test1>
+LD r10 a
+LD r11 b
+ADD r10 r11 r12
+ST r12 c
+INC r3
+RFS
+
+<test2>
+LDI r10 0
+INC r10
+DEC r10
+INC r5
+RFS
+
+<test3>
+PSH r10
+PSH r11
+POP r11
+POP r10
+INC r7
+RFS
+
+<test4>
+TRR r10 r11
+TRR r12 r10
+TRR r13 r10
+LDI8 r10 16
+LDI8 r11 4
+MUL r10 r11 r12
+MULI r10 4
+INC r9
+RFS

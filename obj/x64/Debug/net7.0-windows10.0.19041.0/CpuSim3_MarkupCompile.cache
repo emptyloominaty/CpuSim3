@@ -4,16 +4,16 @@
 winexe
 C#
 .cs
-D:\Projects\CpuSim3\obj\x64\Debug\net7.0-windows10.0.19041.0\
+C:\Users\Adam.Biskupic\Desktop\1\2\3\Git&IntellijIdea\projects\CpuSim3\obj\x64\Debug\net7.0-windows10.0.19041.0\
 CpuSim3
 none
 false
 TRACE;DEBUG;NET;NET7_0;NETCOREAPP
-D:\Projects\CpuSim3\App.xaml
+C:\Users\Adam.Biskupic\Desktop\1\2\3\Git&IntellijIdea\projects\CpuSim3\App.xaml
 41161875318
 
 17346638714
-200-418899729
+200-581953718
 DebugWindow.xaml;Display.xaml;MainWindow.xaml;MemoryViewer.xaml;
 
 False

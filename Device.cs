@@ -13,17 +13,27 @@ namespace CpuSim3 {
     public class Device {
         public Thread deviceThread;
         public int startAddress;
+        public int deviceAddress;
         public byte id = 0;
         public byte type = 0;
-
+        public int bufferStartAddress;
+        public int bufferSize;
         public Device(byte type, byte id, int bufferStartAddress, int bufferSize) {
             //Array.Clear(memory, 0, memory.Length);
-            startAddress = (int)(8388608 + (524288 * id));
+
+            this.bufferStartAddress = bufferStartAddress;
+            this.bufferSize = bufferSize;
+
+            startAddress = 0x800000 + (0x80000 * id);
+            deviceAddress = startAddress;
             this.id = id;
             this.type = type;
             //Memory.Data
 
             for (int i = 0; i <= 0xFF; i++) {
+                Memory.DataCanWriteArray[(8388608 + (524288 * id)) + i] = true;
+            }
+            for (int i = bufferStartAddress; i <= bufferStartAddress + bufferSize; i++) {
                 Memory.DataCanWriteArray[(8388608 + (524288 * id)) + i] = true;
             }
 

@@ -10,6 +10,7 @@ namespace CpuSim3 {
         public static Cpu cpu;
         public static List<Device> devices;
         public static List<Display> displays;
+        public static List<StorageWindow> storages;
         public static string cpuDebug = "";
         public static string assemblerDebug = "";
     }

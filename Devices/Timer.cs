@@ -17,7 +17,7 @@ namespace CpuSim3.Devices {
 
 
         public Timer(byte type, byte id, int bufferStartAddress, int bufferSize, byte timers = 4) 
-            : base(7, id, bufferStartAddress, bufferSize) {
+            : base(type, id, bufferStartAddress, bufferSize) {
             this.timers = timers;
 
             for (int i = 0x100; i <= 0x1000; i++) {

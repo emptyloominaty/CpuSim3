@@ -16,6 +16,9 @@
     <Compile Update="MemoryViewer.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="StorageWindow.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Page Update="DebugWindow.xaml">
@@ -28,6 +31,9 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="MemoryViewer.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="StorageWindow.xaml">
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>

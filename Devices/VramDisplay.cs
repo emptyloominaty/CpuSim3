@@ -10,7 +10,7 @@ namespace CpuSim3.Devices {
     public class VramDisplay : Device {
 
         public VramDisplay(byte type, byte id, int bufferStartAddress, int bufferSize,int vramSize, int screenWidth, int screenHeight) 
-            : base(4, id, bufferStartAddress, bufferSize) {
+            : base(type, id, bufferStartAddress, bufferSize) {
 
             byte[] screenWidthB = Functions.ConvertFrom16Bit(screenWidth);
             Write(0x0100, screenWidthB[0]);

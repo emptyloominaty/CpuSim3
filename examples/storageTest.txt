@@ -1,0 +1,85 @@
+const 3 storageAddress 0x980000
+const 3 bufferStartAddress 0x980100
+const 3 bufferSize 512
+const 3 memAddressTest 0x020000
+
+;interrupt pointer;
+LDI3 r0 0x05E000
+LDI3 r1 0x0001C8
+STR3 r0 r1
+
+LD3 r10 memAddressTest
+JSR writeTest
+JSR readTest
+STOP
+
+<writeTest>
+;reset register r0;
+LDI1 r0 0
+;DeviceAddress+26 = 2;
+LD3 r31 storageAddress
+LD3 r30 bufferStartAddress
+LD3 r29 bufferSize
+;idx;
+MOV r30 r1
+;size-2;
+ADD r29 r30 r2
+SUBI1 r2 2
+JSR writeLoop
+;address;
+MOV r31 r21
+ADDI1 r21 27
+LDI3 r20 0xFF
+STR4 r20 r21
+;write instruction for storage;
+MOV r31 r28
+ADDI1 r28 26
+LDI1 r27 2
+STR1 r27 r28
+; ;
+HLT
+RFS
+
+<writeLoop>
+;;
+STR4 r0 r1
+;random data;
+INC r0
+;inc idx;
+ADDI1 r1 4
+JG r2 r1 writeLoop
+RFS
+
+<readTest>
+LD3 r31 storageAddress
+LD3 r30 bufferStartAddress
+LD3 r29 bufferSize
+;address;
+MOV r31 r21
+ADDI1 r21 27
+LDI3 r20 0xFF
+STR4 r20 r21
+;read instruction for storage;
+MOV r31 r28
+ADDI1 r28 26
+LDI1 r27 1
+STR1 r27 r28
+HLT
+;idx;
+MOV r30 r1
+;size-2;
+ADD r29 r30 r2
+SUBI1 r2 2
+JSR readLoop
+RFS
+
+<readLoop>
+LDR4 r0 r1
+STR4 r0 r10
+ADDI1 r10 4
+ADDI1 r1 4
+JG r2 r1 readLoop
+RFS
+
+.ORG 0x05E000
+RFI

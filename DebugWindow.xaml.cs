@@ -26,7 +26,7 @@ namespace CpuSim3 {
             CpuDebug.Text = GlobalVars.cpuDebug;
             AssemblerDebug.Text = GlobalVars.assemblerDebug;
             if (scrollToEnd) {
-                CpuDebug.ScrollToEnd(); //TODO BUTTON
+                CpuDebug.ScrollToEnd(); 
             }
         }
 

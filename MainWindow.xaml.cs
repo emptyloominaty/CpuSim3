@@ -25,6 +25,7 @@ namespace CpuSim3 {
         public long time1 = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
         public OpCodes opCodes;
         public Cpu cpu;
+        public List<StorageWindow> storages = new List<StorageWindow>();
         public List<Display> displays = new List<Display>();
         public List<Device> devices = new List<Device>();
         public bool autoRefreshMemory = false;
@@ -47,7 +48,7 @@ namespace CpuSim3 {
             Application.Current.MainWindow = this;
             GlobalVars.devices = devices;
             GlobalVars.displays = displays;
-
+            GlobalVars.storages = storages;
             //memoryViewerWindow.Show();
             //debugWindow.Show();
 
@@ -60,12 +61,17 @@ namespace CpuSim3 {
 
             GlobalVars.cpu = cpu;
 
+            int displayIdx = 0;
+            int storageIdx = 0;
+
             devices.Add(new Devices.Keyboard (0, 0, 0xF, 64));
             devices.Add(new Devices.Timer(7, 1, 0xF, 64));
             devices.Add(new Devices.VramDisplay(4, 2, 0xF, 64, 524288, 512, 400));
+            devices.Add(new Devices.Storage(2, 3, 0x100, 512, 1048576));
+
+
 
             bool keyBoardDev = false;
-            bool displayDev = false;
             for (int i = 0; i<devices.Count; i++) {
                 StackPanel stackPanel = new StackPanel();
                 stackPanel.Orientation = Orientation.Horizontal;
@@ -95,13 +101,22 @@ namespace CpuSim3 {
                     textBoxKey.Name = "textBoxKey";
                     textBoxKey.KeyDown += OnKeyDownHandler;
                     stackPanel.Children.Add(textBoxKey);
-                } else if ((devices[i].type == 1 || devices[i].type == 4) && !displayDev) {
-                    displayDev = true;
+                } else if (devices[i].type == 1 || devices[i].type == 4) {
                     Button Btn_Display = new Button();
                     Btn_Display.Name = "Btn_Display";
                     Btn_Display.Content = "Display";
                     Btn_Display.Click += Btn_Display_Click;
+                    Btn_Display.Tag = Tuple.Create(i, displayIdx);
+                    displayIdx++;
                     stackPanel.Children.Add(Btn_Display);
+                } else if (devices[i].type == 2) {
+                    Button Btn_Storage = new Button();
+                    Btn_Storage.Name = "Btn_Storage";
+                    Btn_Storage.Content = "Storage";
+                    Btn_Storage.Click += Btn_Storage_Click;
+                    Btn_Storage.Tag = Tuple.Create(i, storageIdx);
+                    storageIdx++;
+                    stackPanel.Children.Add(Btn_Storage);
                 }
 
 
@@ -453,15 +468,40 @@ namespace CpuSim3 {
 
 
         private void Btn_Display_Click(object sender, RoutedEventArgs e) {
-            if (displays[0].IsVisible) {
-                displays[0].Hide();
-            } else if (displays[0].IsLoaded) {
-                displays[0].Show();
+            Button button = (Button)sender;
+            Tuple<int, int> data = (Tuple<int, int>)button.Tag;
+
+            int deviceId = data.Item1;
+            int displayId = data.Item2;
+
+            if (displays[displayId].IsVisible) {
+                displays[displayId].Hide();
+            } else if (displays[displayId].IsLoaded) {
+                displays[displayId].Show();
             } else {
-                displays[0] = new Display(2); //TODO device id
-                displays[0].Show();
+                displays[displayId] = new Display((byte)deviceId); 
+                displays[displayId].Show();
             }
         }
+
+        private void Btn_Storage_Click(object sender, RoutedEventArgs e) {
+            Button button = (Button)sender;
+            Tuple<int, int> data = (Tuple<int, int>)button.Tag;
+
+            int deviceId = data.Item1;
+            int storageId = data.Item2;
+
+            if (storages[storageId].IsVisible) {
+                storages[storageId].Hide();
+            } else if (storages[storageId].IsLoaded) {
+                storages[storageId].Show();
+            } else {
+                storages[storageId] = new StorageWindow((byte)deviceId);
+                storages[storageId].Show();
+            }
+        }
+        
+
     }
 
 }

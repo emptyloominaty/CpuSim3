@@ -11,7 +11,7 @@ namespace CpuSim3.Devices {
     public class Keyboard : Device {
 
         public Keyboard(byte type, byte id, int bufferStartAddress, int bufferSize) 
-            : base(0, id, bufferStartAddress, bufferSize) {
+            : base(type, id, bufferStartAddress, bufferSize) {
         }
 
         public override void Run() {
@@ -19,7 +19,7 @@ namespace CpuSim3.Devices {
                 if (GlobalVars.key > 0 && Read(0x17)==0) {
                     Write(0x18, (byte)GlobalVars.key);
                     GlobalVars.key = 0;
-                    Interrupt((byte)(id * 16));
+                    Interrupt(0);
                 }
               
                 Thread.Sleep(10);

@@ -39,7 +39,7 @@ namespace CpuSim3 {
 
             Memory.Data[startAddress+0] = type; //type   0=keyboard 1=gpu 2=storage 3=network 4=vram+display, 5=fpu, 6-user storage port, 7=timer
             Memory.Data[startAddress+1] = id; //id
-            Memory.Data[startAddress+2] = 0; //
+            Memory.Data[startAddress+2] = 1; // 1
             Memory.Data[startAddress+3] = 0; //
             Memory.Data[startAddress+4] = 0; //
             Memory.Data[startAddress+5] = 0; //

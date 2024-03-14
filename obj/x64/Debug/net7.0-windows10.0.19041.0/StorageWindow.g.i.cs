@@ -61,7 +61,7 @@ namespace CpuSim3 {
                 return;
             }
             _contentLoaded = true;
-            System.Uri resourceLocater = new System.Uri("/CpuSim3;component/storagewindow.xaml", System.UriKind.Relative);
+            System.Uri resourceLocater = new System.Uri("/CpuSim3;V1.0.0.0;component/storagewindow.xaml", System.UriKind.Relative);
             
             #line 1 "..\..\..\..\StorageWindow.xaml"
             System.Windows.Application.LoadComponent(this, resourceLocater);
